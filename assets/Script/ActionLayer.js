@@ -1,0 +1,101 @@
+
+cc.Class({
+    extends: cc.Component,
+
+    properties: {
+        // foo: {
+        //    default: null,      // The default value will be used only when the component attaching
+        //                           to a node for the first time
+        //    url: cc.Texture2D,  // optional, default is typeof default
+        //    serializable: true, // optional, default is true
+        //    visible: true,      // optional, default is true
+        //    displayName: 'Foo', // optional
+        //    readonly: false,    // optional, default is false
+        // },
+        // ...
+    },
+
+    // use this for initialization
+    onLoad: function () {
+        this.node.on(cc.Node.EventType.MOUSE_DOWN, function (event) {
+            if (this._managerJS) {
+                this._managerJS.shootBullet(event.getLocationX(), event.getLocationY());
+            }
+        }, this);
+        // add key down and key up event
+        cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
+        cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP, this.onKeyUp, this);
+    },
+    hide() {
+        this.node.active = false;
+    },
+    show() {
+        this.node.active = true;
+    },
+    onDestroy() {
+        cc.systemEvent.off(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
+        cc.systemEvent.off(cc.SystemEvent.EventType.KEY_UP, this.onKeyUp, this);
+    },
+    getTargetRotation() {
+        if (this.keyLeft) {
+            return 180;
+        } else if (this.keyRight) {
+            return 0;
+        } else if (this.keyUp) {
+            return 90;
+        } else if (this.keyDown) {
+            return -90;
+        } else {
+            return null;
+        }
+    },
+    onKeyDown: function (event) {
+        switch (event.keyCode) {
+            case cc.KEY.left:
+                {
+                    this.keyLeft = true;
+                    break;
+                }
+            case cc.KEY.right:
+                {
+                    this.keyRight = true;
+                    break;
+                }
+            case cc.KEY.up:
+                {
+                    this.keyUp = true;
+                    break;
+                }
+            case cc.KEY.down:
+                {
+                    this.keyDown = true;
+                    break;
+                }
+
+        }
+    },
+    onKeyUp: function (event) {
+        switch (event.keyCode) {
+            case cc.KEY.left:
+                {
+                    this.keyLeft = false;
+                    break;
+                }
+            case cc.KEY.right:
+                {
+                    this.keyRight = false;
+                    break;
+                }
+            case cc.KEY.up:
+                {
+                    this.keyUp = false;
+                    break;
+                }
+            case cc.KEY.down:
+                {
+                    this.keyDown = false;
+                    break;
+                }
+        }
+    },
+});
