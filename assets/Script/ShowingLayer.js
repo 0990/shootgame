@@ -38,6 +38,7 @@ cc.Class({
 
     },
     setLeftClock(leftTime) {
+        this.unschedule(this.callback);
         this.count = leftTime;
         this.clockLabel.string = "倒计时:" + this.count;
         this.clockLabel.node.active = true;

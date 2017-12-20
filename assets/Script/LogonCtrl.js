@@ -5,6 +5,7 @@ var Util = require('Util');
 window.G = {
     entityID: -1,
     rotationDelta: 20,
+    gameStartTime: -1,
 }
 
 cc.Class({
@@ -19,6 +20,7 @@ cc.Class({
         startLayer: cc.Node,
         actionLayer: cc.Node,
         showingLayer: cc.Node,
+        camera: cc.Node,
 
         clientPrediction: false,
         serverReconciliation: false,
@@ -31,6 +33,8 @@ cc.Class({
             this._startLayerJS.hideNameEditLayer();
             this._startLayerJS.showStartBtn();
             this._startLayerJS.show("网络已断,重连?");
+            this.bulletLayer.active = false;
+            this.entityLayer.active = false;
         }
     },
     // use this for initialization
@@ -71,6 +75,9 @@ cc.Class({
     shootBullet(worldX, worldY) {
         if (G.entityID === -1) return;
         if (!this.entityMap.has(G.entityID)) return;
+        let now = new Date().getTime();
+        if (now - this.lastShootTime < 700) return;
+        this.lastShootTime = now;
         // let meNode = this.entityMap.get(G.entityID);
         // let meWorldP = meNode.parent.convertToWorldSpaceAR(meNode.getPosition());
         // cc.log(worldX);
@@ -119,9 +126,12 @@ cc.Class({
                     let userData = {
                         entityID: G.entityID,
                         name: G.name,
+                        gameStartTime: G.gameStartTime,
                     };
                     cc.sys.localStorage.setItem('visitorData', JSON.stringify(userData));
                     this.init();
+                    this.bulletLayer.active = true;
+                    this.entityLayer.active = true;
                     this._showingLayerJS.setLeftClock(data.leftTime);
                     for (let i = 0; i < data.entities.length; i++) {
                         this.createEntity(data.entities[i]);
@@ -133,10 +143,12 @@ cc.Class({
 
             case Cmd.SUB_MB_LOGON_FAILURE:
                 {
+                    this.bulletLayer.active = false;
+                    this.entityLayer.active = false;
                     this._startLayerJS.showNameEditLayer();
                     this._startLayerJS.showStartBtn();
                     this._startLayerJS.setLeftClock(data.leftTime);
-                    this._startLayerJS.show("您已阵亡，下场在战！倒计时：");
+                    this._startLayerJS.show("您已阵亡，下场在战！");
                     break;
                 }
         }
@@ -153,27 +165,50 @@ cc.Class({
         this.bulletMap.clear();
         this.entityLayer.removeAllChildren();
         this.bulletLayer.removeAllChildren();
+        this.lastShootTime = 0;
     },
     onGameMessage: function (msg) {
         if (G.entityID === -1) return;
         msg = msg.detail;
         var data = msg.data;
         switch (msg.subID) {
+            case Cmd.SUB_MB_CALCULATE_RESULT: {
+                if (data.entityDeleteList) {
+                    for (let i = 0; i < data.entityDeleteList.length; i++) {
+                        let entityID = data.entityDeleteList[i];
+                        if (G.entityID === entityID) {
+                        } else {
+                            let itemJS = this.entityMap.get(entityID);
+                            this.entityMap.delete(entityID);
+                            this.entityPool.put(itemJS.node);
+                        }
+                    }
+                }
+
+                if (data.bulletDeleteList) {
+                    for (let i = 0; i < data.bulletDeleteList.length; i++) {
+                        let bulletID = data.bulletDeleteList[i];
+                        if (this.bulletMap.has(bulletID)) {
+                            let itemJS = this.bulletMap.get(bulletID);
+                            this.bulletMap.delete(bulletID);
+                            this.bulletPool.put(itemJS.node);
+                        }
+                    }
+                }
+
+                if (data.entityChangeList) {
+                    for (let i = 0; i < data.entityChangeList.length; i++) {
+                        let item = data.entityChangeList[i];
+                        let itemJS = this.entityMap.get(item.entityID);
+                        itemJS.applyDisplay(item);
+                    }
+                }
+
+                break;
+            }
             case Cmd.SUB_MB_NEW_ENTITY: {
                 if (data.entityID === G.entityID) return;
                 this.createEntity(data);
-                break;
-            }
-            case Cmd.SUB_MB_DESTROY_ENTITY: {
-                for (let i = 0; i < data.entities.length; i++) {
-                    let item = data.entities[i];
-                    if (G.entityID === item.entityID) {
-                    } else {
-                        let entityJS = this.entityMap.get(item.entityID);
-                        this.entityMap.delete(item.entityID);
-                        this.entityPool.put(entityJS.node);
-                    }
-                }
                 break;
             }
             //接受所有玩家的状态
@@ -184,7 +219,7 @@ cc.Class({
                     for (let i = 0; i < data.entities.length; i++) {
                         let item = data.entities[i];
                         let entityJS = this.entityMap.get(item.entityID);
-                        entityJS.applyInfo(item);
+                        //entityJS.applyInfo(item);
                         //如果是我
                         if (item.entityID === G.entityID) {
                             entityJS.node.x = item.x;
@@ -224,22 +259,28 @@ cc.Class({
                 this.createBullet(data);
                 break;
             }
-            case Cmd.SUB_MB_DESTROY_BULLET: {
-                for (let i = 0; i < data.length; i++) {
-                    let item = this.bulletMap.get(data[i]);
-                    this.bulletMap.delete(data[i]);
-                    this.bulletPool.put(item.node);
-                }
+            // case Cmd.SUB_MB_DESTROY_BULLET: {
+            //     for (let i = 0; i < data.length; i++) {
+            //         let item = this.bulletMap.get(data[i]);
+            //         this.bulletMap.delete(data[i]);
+            //         this.bulletPool.put(item.node);
+            //     }
+            //     break;
+            // }
+            case Cmd.SUB_MB_RANK: {
+                cc.log(data.leftTime);
+                cc.log(data.rankInfo);
                 break;
             }
             case Cmd.SUB_MB_GAME_END: {
                 if (data.overReason === Cmd.OVER_REASON_KILLED) {
                     this._startLayerJS.hideNameEditLayer();
-                    if (item.ghostDead) {
+                    if (data.ghostDead) {
                         this._startLayerJS.hideStartBtn();
-                        this._startLayerJS.setLeftClock(data.leftTime);
-                        this._startLayerJS.show("生无绝恋，下场在战！倒计时：");
-                    } else if (item.dead) {
+                        // this._startLayerJS.setLeftClock(data.leftTime);
+                        this._startLayerJS.show("您已阵亡，下场在战!");
+                        this._startLayerJS.showStartBtn();
+                    } else if (data.dead) {
                         this._startLayerJS.showStartBtn();
                         this._startLayerJS.show("还魂报仇(注意：您已阵亡，将不参与排名)！");
                     }
@@ -248,7 +289,8 @@ cc.Class({
                     this._startLayerJS.showNameEditLayer();
                     this._startLayerJS.show('再战！');
                 }
-
+                this.bulletLayer.active = false;
+                this.entityLayer.active = false;
                 this._actionLayerJS.hide();
                 this.activeClose = true;
                 G.entityID = -1;
@@ -321,10 +363,25 @@ cc.Class({
                     let r1 = buffer[1][3];
                     entityJS.node.x = x0 + (x1 - x0) * (render_timeStamp - t0) / (t1 - t0);
                     entityJS.node.y = y0 + (y1 - y0) * (render_timeStamp - t0) / (t1 - t0);
-                    entityJS.node.rotation = -(r0 + (r1 - r0) * (render_timeStamp - r0) / (t1 - t0));
+                    entityJS.node.rotation = -(r0 + (r1 - r0) * (render_timeStamp - t0) / (t1 - t0));
                 }
             }
-
         });
     },
+    lateUpdate: function (dt) {
+        if (G.entityID === -1) return;
+        let meNode = this.entityMap.get(G.entityID).node;
+        let targetPos = this.entityMap.get(G.entityID).node.convertToWorldSpaceAR(cc.Vec2.ZERO);
+        if (meNode.x < 640) {
+            targetPos.x = 640;
+        } else if (meNode.x > 2560 - 640) {
+            targetPos.x = 2560 - 640;
+        }
+        if (meNode.y < 360) {
+            targetPos.y = 360;
+        } else if (meNode.y > 1440 - 360) {
+            targetPos.y = 1440 - 360;
+        }
+        this.camera.position = this.camera.parent.convertToNodeSpaceAR(targetPos);
+    }
 });

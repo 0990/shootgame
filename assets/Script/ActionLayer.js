@@ -3,6 +3,7 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
+        joy: cc.Node,
         // foo: {
         //    default: null,      // The default value will be used only when the component attaching
         //                           to a node for the first time
@@ -25,6 +26,7 @@ cc.Class({
         // add key down and key up event
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP, this.onKeyUp, this);
+        this._joyJS = this.joy.getComponent('JoystickBG');
     },
     hide() {
         this.node.active = false;
@@ -46,7 +48,7 @@ cc.Class({
         } else if (this.keyDown) {
             return -90;
         } else {
-            return null;
+            return this._joyJS.getTargetAngle();
         }
     },
     onKeyDown: function (event) {

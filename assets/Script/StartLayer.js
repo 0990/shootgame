@@ -40,9 +40,9 @@ cc.Class({
     // onLoad () {},
 
     start() {
-        this.localData = JSON.parse(cc.sys.localStorage.getItem('visitorData'));
-        if (this.localData !== null) {
-            this.nameEditBox.string = this.localData.name;
+        let localData = JSON.parse(cc.sys.localStorage.getItem('visitorData'));
+        if (localData !== null) {
+            this.nameEditBox.string = localData.name;
         }
     },
     setStatusInfo(info) {
@@ -76,29 +76,32 @@ cc.Class({
         this.startBtnNode.active = false;
     },
     setLeftClock(leftTime) {
-        this.count = leftTime;
-        this.clockLabel.string = this.count;
-        this.clockLabel.node.active = true;
-        this.callback = function () {
-            this.count--;
-            if (this.count === 0) {
-                this.unschedule(this.callback);
-                this.setStatusInfo("可以开始了");
-                this.showStartBtn();
-                this.clockLabel.node.active = false;
-            }
-            this.clockLabel.string = this.count;
-        }
-        this.schedule(this.callback, 1);
+        // this.count = leftTime;
+        // this.clockLabel.string = this.count;
+        // this.clockLabel.node.active = true;
+        // this.callback = function () {
+        //     this.count--;
+        //     if (this.count === 0) {
+        //         this.unschedule(this.callback);
+        //         this.setStatusInfo("可以开始了");
+        //         this.showStartBtn();
+        //         this.clockLabel.node.active = false;
+        //     }
+        //     this.clockLabel.string = this.count;
+        // }
+        // this.schedule(this.callback, 1);
     },
     sendLogonVisitorMsg() {
-        //var userData = JSON.parse(cc.sys.localStorage.getItem('visitorData'));
+        let localData = JSON.parse(cc.sys.localStorage.getItem('visitorData'));                
         var msg = {};
-        if (this.localData !== null) {
-            msg.entityID = this.localData.entityID;
+        if (localData !== null) {
+            msg.entityID = localData.entityID;
+            msg.gameStartTime = localData.gameStartTime;
         } else {
             msg.entityID = -1;
+            msg.gameStartTime = -1;
         }
+        // msg.entityID = -1;
         msg.name = this.nameEditBox.string;
         NetCtrl.send(Cmd.MDM_MB_LOGON, Cmd.SUB_MB_LOGON_VISITOR, msg);
     },
