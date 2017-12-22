@@ -36,13 +36,20 @@ cc.Class({
     },
 
     // LIFE-CYCLE CALLBACKS:
-
-    // onLoad () {},
-
-    start() {
-        let localData = JSON.parse(cc.sys.localStorage.getItem('visitorData'));
-        if (localData !== null) {
-            this.nameEditBox.string = localData.name;
+    onLoad() {
+        // if (cc.sys.browserType === cc.sys.BROWSER_TYPE_WECHAT) {
+        let code = this.getQueryString('code');
+        if (code) {
+            let msg = {};
+            msg.code = code;
+            NetCtrl.createNewSocket(() => {
+                NetCtrl.send(Cmd.MDM_MB_LOGON, Cmd.SUB_MB_WX_LOGON_FIRST, msg);
+            });
+        } else {
+            let localData = JSON.parse(cc.sys.localStorage.getItem('visitorData'));
+            if (localData !== null && localData.name) {
+                this.nameEditBox.string = localData.name;
+            }
         }
     },
     setStatusInfo(info) {
@@ -92,17 +99,20 @@ cc.Class({
         // this.schedule(this.callback, 1);
     },
     sendLogonVisitorMsg() {
-        let localData = JSON.parse(cc.sys.localStorage.getItem('visitorData'));                
+        let localData = JSON.parse(cc.sys.localStorage.getItem('visitorData'));
         var msg = {};
         if (localData !== null) {
-            msg.entityID = localData.entityID;
-            msg.gameStartTime = localData.gameStartTime;
+            msg.userID = localData.userID;
         } else {
-            msg.entityID = -1;
-            msg.gameStartTime = -1;
+            msg.userID = 0;
         }
-        // msg.entityID = -1;
         msg.name = this.nameEditBox.string;
         NetCtrl.send(Cmd.MDM_MB_LOGON, Cmd.SUB_MB_LOGON_VISITOR, msg);
     },
+
+    getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]); return null;
+    }
 });

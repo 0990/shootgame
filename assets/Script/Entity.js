@@ -14,11 +14,31 @@ cc.Class({
         // },
         // ...
         nameLabel: cc.Label,
+        avatarSprite: cc.Sprite,
+        defaultFrame: cc.SpriteFrame,
+        directionNode: cc.Node,
     },
 
     // use this for initialization
     onLoad: function () {
 
+    },
+    showAvatar(headImgUrl) {
+        let self = this;
+        if (headImgUrl && headImgUrl != ' ') {
+            let imgurl = headImgUrl.substr(0, headImgUrl.length - 1) + "96";
+            cc.loader.load({
+                url: imgurl, type: 'jpg'
+            }, function (err, texture) {
+                if (err) {
+                    // self.showOriginAvatar();
+                } else {
+                    self.avatarSprite.spriteFrame = new cc.SpriteFrame(texture);
+                }
+            });
+        } else {
+            //self.showOriginAvatar();
+        }
     },
     applyInput(input) {
         let targetRotation = input.targetRotation;
@@ -58,12 +78,22 @@ cc.Class({
         this.node.x += distance * Math.cos(radian);
         this.rotation = newRotation;
         this.node.rotation = -this.rotation;
+        // this.displayDirection(this.rotation);
+    },
+    // update() {
+    //     let radian = -this.rotation * Math.PI / 180;
+    //     this.directionNode.x = (G.entityRadius + 8) * Math.cos(radian);
+    //     this.directionNode.y = (G.entityRadius + 8) * Math.sin(radian);
+    // },
+    displayDirection(rotation) {
+
     },
     init(info) {
-        this.entityID = info.entityID;
-        this.rotation = -info.rotation;
-        this.node.x = info.x;
-        this.node.y = info.y;
+        // this.entityID = info.entityID;
+        //this.rotation = -info.rotation;
+        this.rotation = 0;
+        this.node.x = -100;
+        this.node.y = -100;
         this.positionBuffer = new Array();
         this.node.color = cc.Color.WHITE;
         this.nameLabel.string = info.name;
@@ -73,6 +103,11 @@ cc.Class({
             this.startProtect();
         }
         this.applyDisplay(info);
+        if (info.accountType === 2) {
+            this.showAvatar(info.headImgUrl);
+        } else {
+            this.avatarSprite.spriteFrame = this.defaultFrame;
+        }
     },
     // applyInfo(info) {
     //     // this.entityID = info.entityID;
@@ -99,7 +134,7 @@ cc.Class({
         } else {
             color = cc.Color.GREEN;
         }
-        this.node.color = color;
+        this.avatarSprite.node.color = color;
     },
     startProtect() {
         this.scheduleOnce(() => {

@@ -124,9 +124,8 @@ cc.Class({
                     cc.log("logon success");
                     G = data.entityInfo;
                     let userData = {
-                        entityID: G.entityID,
+                        userID: G.userID,
                         name: G.name,
-                        gameStartTime: G.gameStartTime,
                     };
                     cc.sys.localStorage.setItem('visitorData', JSON.stringify(userData));
                     this.init();
@@ -208,6 +207,7 @@ cc.Class({
             }
             case Cmd.SUB_MB_NEW_ENTITY: {
                 if (data.entityID === G.entityID) return;
+                if (this.entityMap.has(data.entityID)) return;
                 this.createEntity(data);
                 break;
             }
@@ -364,6 +364,8 @@ cc.Class({
                     entityJS.node.x = x0 + (x1 - x0) * (render_timeStamp - t0) / (t1 - t0);
                     entityJS.node.y = y0 + (y1 - y0) * (render_timeStamp - t0) / (t1 - t0);
                     entityJS.node.rotation = -(r0 + (r1 - r0) * (render_timeStamp - t0) / (t1 - t0));
+                    entityJS.rotation = -entityJS.node.rotation;
+                    // entityJS.displayDirection(-entityJS.node.rotation);
                 }
             }
         });
