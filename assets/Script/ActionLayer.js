@@ -23,17 +23,17 @@ cc.Class({
         //         this._managerJS.shootBullet(event.getLocationX(), event.getLocationY());
         //     }
         // }, this);
-        // this.node.on(cc.Node.EventType.TOUCH_START, function (event) {
-        //     if (this._managerJS) {
-        //         this._managerJS.shootBullet(event.getLocationX(), event.getLocationY());
-        //     }
-        // }, this);
+        this.node.on(cc.Node.EventType.TOUCH_START, function (event) {
+            if (this._managerJS) {
+                this._managerJS.shootBullet(event.getLocationX(), event.getLocationY());
+            }
+        }, this);
         // add key down and key up event
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP, this.onKeyUp, this);
         this._joyJS = this.joy.getComponent('JoystickBG');
     },
-    clickShoot(){
+    clickShoot() {
         if (this._managerJS) {
             this._managerJS.shootBullet();
         }

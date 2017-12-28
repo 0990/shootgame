@@ -67,7 +67,11 @@ cc.Class({
     //登录
     clickStartBtn() {
         NetCtrl.createNewSocket(() => {
-            this.sendLogonVisitorMsg();
+            if (G.accountType === Cmd.ACCOUNT_TYPE_WX) {
+                this.sendLogonWXOpenID();
+            } else {
+                this.sendLogonVisitorMsg();
+            }
         });
     },
     hideNameEditLayer() {
@@ -109,7 +113,11 @@ cc.Class({
         msg.name = this.nameEditBox.string;
         NetCtrl.send(Cmd.MDM_MB_LOGON, Cmd.SUB_MB_LOGON_VISITOR, msg);
     },
-
+    sendLogonWXOpenID() {
+        var msg = {};
+        msg.openID = G.openID;
+        NetCtrl.send(Cmd.MDM_MB_LOGON, Cmd.SUB_MB_LOGON_WX_OPENID, msg);
+    },
     getQueryString(name) {
         var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
         var r = window.location.search.substr(1).match(reg);

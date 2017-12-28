@@ -6,6 +6,7 @@ window.G = {
     entityID: -1,
     rotationDelta: 20,
     gameStartTime: -1,
+    accountType:1,
 }
 
 cc.Class({

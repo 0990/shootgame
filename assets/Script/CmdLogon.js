@@ -10,6 +10,7 @@ var constant = {
     SUB_MB_WX_LOGON_FIRST: 4,
     SUB_MB_WX_LOGON_SECOND: 5,
     SUB_MB_LOGON_VISITOR: 6,
+    SUB_MB_LOGON_WX_OPENID:7,
     SUB_MB_CHECK_VERSION: 9,
     //登录结果
     SUB_GP_LOGON_SUCCESS: 100,//登录成功
@@ -44,6 +45,10 @@ var constant = {
 
     OVER_REASON_KILLED: 0,
     OVER_REASON_NORMAL: 1,
+
+    ACCOUNT_TYPE_VISITOR:1,
+    ACCOUNT_TYPE_WX:2,
+    ACCOUNT_TYPE_ROBOT:3,
 };
 
 
