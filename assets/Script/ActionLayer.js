@@ -38,6 +38,11 @@ cc.Class({
             this._managerJS.shootBullet();
         }
     },
+    clickJump(){
+        if (this._managerJS) {
+            this._managerJS.sendJumpMessage();
+        }
+    },
     hide() {
         this.node.active = false;
     },

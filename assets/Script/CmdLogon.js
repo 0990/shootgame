@@ -42,6 +42,7 @@ var constant = {
     SUB_MB_NEW_ENTITY: 7,      //新玩家加入
     SUB_MB_DESTROY_ENTITY: 8,  //玩家死亡
     SUB_MB_CALCULATE_RESULT:9,
+    SUB_MB_JUMP:10,
 
     OVER_REASON_KILLED: 0,
     OVER_REASON_NORMAL: 1,

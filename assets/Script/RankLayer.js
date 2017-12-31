@@ -12,8 +12,8 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-        clockLabel: cc.Label,
-        rankLayer: cc.Node,
+        rankLabel: [cc.Label],
+        meRank: cc.Label,
         // foo: {
         //     // ATTRIBUTES:
         //     default: null,        // The default value will be used only when the component attaching
@@ -30,38 +30,10 @@ cc.Class({
         //     }
         // },
     },
-
-    // LIFE-CYCLE CALLBACKS:
-
-    onLoad() {
-        this._rankLayerJS = this.rankLayer.getComponent('RankLayer');
-    },
-
     setRank(index, string) {
-        this._rankLayerJS.setRank(index, string);
+        this.rankLabel[index].string = string;
     },
     setMeRank(string) {
-        this._rankLayerJS.setMeRank(string);
-    },
-    start() {
-
-    },
-    setLeftClock(leftTime) {
-        this.unschedule(this.callback);
-        this.count = leftTime;
-        this.clockLabel.string = "倒计时:" + this.count;
-        this.clockLabel.node.active = true;
-        this.callback = function () {
-            this.count--;
-            if (this.count === 0) {
-                this.unschedule(this.callback);
-                this.clockLabel.node.active = false;
-            }
-            this.clockLabel.string = "倒计时:" + this.count;
-        }
-        this.schedule(this.callback, 1);
-    },
-
-
-    // update (dt) {},
+        this.meRank.string = string;
+    }
 });

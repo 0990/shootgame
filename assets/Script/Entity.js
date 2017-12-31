@@ -14,9 +14,11 @@ cc.Class({
         // },
         // ...
         nameLabel: cc.Label,
+        scoreLabel: cc.Label,
         avatarSprite: cc.Sprite,
         defaultFrame: cc.SpriteFrame,
         directionNode: cc.Node,
+        deadClip: cc.AudioClip,
     },
 
     // use this for initialization
@@ -96,12 +98,14 @@ cc.Class({
         this.node.y = -100;
         this.positionBuffer = new Array();
         this.node.color = cc.Color.WHITE;
+        this.name = info.name;
         this.nameLabel.string = info.name;
         if (info.ghostMode) {
             this.node.opacity = 80;
         } else {
             this.startProtect();
         }
+        this.dead = info.dead;
         this.applyDisplay(info);
         if (info.accountType === 2) {
             this.showAvatar(info.headImgUrl);
@@ -135,10 +139,23 @@ cc.Class({
             color = cc.Color.GREEN;
         }
         this.avatarSprite.node.color = color;
+        this.scoreLabel.string = this.score;
     },
     startProtect() {
         this.scheduleOnce(() => {
             cc.log("protect cancel");
         }, G.protectTime);
+    },
+    playDeadAni() {
+        var anim = this.avatarSprite.getComponent(cc.Animation);
+        //var animName = self.node.name + 'ani';
+        anim.play();
+        anim.on('finished', this.onFinished, this);
+        //播放音效
+        cc.audioEngine.playEffect(this.deadClip, false);
+    },
+    onFinished() {
+        this._managerJS.entityDied(this.node);
     }
+
 });
