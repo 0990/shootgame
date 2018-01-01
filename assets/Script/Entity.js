@@ -18,7 +18,7 @@ cc.Class({
         avatarSprite: cc.Sprite,
         defaultFrame: cc.SpriteFrame,
         directionNode: cc.Node,
-        deadClip: cc.AudioClip,
+       // deadClip: cc.AudioClip,
     },
 
     // use this for initialization
@@ -130,7 +130,7 @@ cc.Class({
         anim.play();
         anim.on('finished', this.onFinished, this);
         //播放音效
-        cc.audioEngine.playEffect(this.deadClip, false);
+        //cc.audioEngine.playEffect(this.deadClip, false);
     },
     onFinished() {
         if(this.entityID===G.entityID){

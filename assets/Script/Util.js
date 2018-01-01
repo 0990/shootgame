@@ -18,9 +18,16 @@ var Util = {
         return angle;
     },
     getQueryString(name) {
+        if (!cc.sys.isMobile) return null;
         var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
         var r = window.location.search.substr(1).match(reg);
         if (r != null) return unescape(r[2]); return null;
+    },
+    getDistance(x1, y1, x2, y2) {
+        let x = x2 - x1;
+        let y = y2 - y1;
+        let distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+        return distance;
     }
 };
 

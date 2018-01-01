@@ -38,7 +38,7 @@ cc.Class({
 
     // LIFE-CYCLE CALLBACKS:
     onLoad() {
-        let code = Util.getQueryString('code');        
+        let code = Util.getQueryString('code');
         if (code) {
             let msg = {};
             msg.code = code;
@@ -53,9 +53,9 @@ cc.Class({
         }
 
         NetCtrl.dataEventHandler = this.node;
-        this.node.on('logonfail',this.onLogonFail,this);
+        this.node.on('logonfail', this.onLogonFail, this);
     },
-    onLogonFail(msg){
+    onLogonFail(msg) {
         msg = msg.detail;
         let data = msg.data;
         this.startBtn.interactable = false;
@@ -65,27 +65,30 @@ cc.Class({
     //登录
     clickStartBtn() {
         NetCtrl.createNewSocket(() => {
-           // if (G.accountType === Cmd.ACCOUNT_TYPE_WX) {
-           //     this.sendLogonWXOpenID();
-           // } else {
-                this.sendLogonVisitorMsg();
-          //  }
+            // if (G.accountType === Cmd.ACCOUNT_TYPE_WX) {
+            //     this.sendLogonWXOpenID();
+            // } else {
+            this.sendLogonVisitorMsg();
+            //  }
         });
     },
-    clockCallback(){
+    clockCallback() {
         this.count--;
+        this.clockLabel.string = 'Start' + this.count;
         if (this.count === 0) {
-            this.unschedule(this.callback);
+            this.unschedule(this.clockCallback);
             this.setStatusInfo("可以开始了");
             this.clockLabel.string = 'Start';
             this.startBtn.interactable = true;
         }
-        this.clockLabel.string = this.count;
+    },
+    setStatusInfo(string) {
+        this.statusInfoLabel.string = string;
     },
     setLeftClock(leftTime) {
         this.unschedule(this.clockCallback);
         this.count = leftTime;
-        this.clockLabel.string = 'Start'+this.count;
+        this.clockLabel.string = 'Start' + this.count;
         this.clockLabel.node.active = true;
         this.schedule(this.clockCallback, 1);
     },
@@ -105,7 +108,7 @@ cc.Class({
         msg.openID = G.openID;
         NetCtrl.send(Cmd.MDM_MB_LOGON, Cmd.SUB_MB_LOGON_WX_OPENID, msg);
     },
-    onDestroy(){
-        this.node.off('logonfail',this.onLogonFail,this);
+    onDestroy() {
+        this.node.off('logonfail', this.onLogonFail, this);
     }
 });

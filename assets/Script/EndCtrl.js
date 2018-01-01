@@ -13,46 +13,50 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-        statusLabel:cc.Label,
-        startBtn:cc.Button,
-        clockLabel:cc.Label,
-        rankLayer:cc.Node,
-        rankLabelPrefab:cc.Prefab,
+        statusLabel: cc.Label,
+        startBtn: cc.Button,
+        clockLabel: cc.Label,
+        rankLayer: cc.Node,
+        rankLabelPrefab: cc.Prefab,
     },
-    onLoad(){
+    onLoad() {
         let gameEnd = G.gameEnd;
-        if(gameEnd.overReason===Cmd.OVER_REASON_KILLED){
+        if (gameEnd.overReason === Cmd.OVER_REASON_OFFLINE) {
+            this.setStatusInfo('Lost Connect,ReConnect?');
+        } else if (gameEnd.overReason === Cmd.OVER_REASON_KILLED) {
             this.setStatusInfo('Killed! Wait For Next Round');
             this.startBtn.interactable = false;
             this.setLeftClock(gameEnd.leftTime);
-        }else{
-          let rank = 0;
-           for (let i = 0; i < gameEnd.rankInfo.length; i++) {
-                 let item = gameEnd.rankInfo[i];
-                 let string = 'Number'+item.rank+":"+item.name;
-                 let slot = cc.instantiate(this.rankLabelPrefab);
-                 this.rankLayer.addChild(slot);
-                 if (item.entityID === G.entityID) {
+        } else {
+            let rank = 0;
+            for (let i = 0; i < gameEnd.rankInfo.length; i++) {
+                let item = gameEnd.rankInfo[i];
+                let string = item.rank + ":" + item.score + "score," + item.name;
+                let slot = cc.instantiate(this.rankLabelPrefab);
+                slot.getComponent(cc.Label).string = string;
+                this.rankLayer.addChild(slot);
+                if (item.entityID === G.entityID) {
                     rank = item.rank;
-                   // break;
+                    // break;
                 }
             }
-            let string = "您当场排名" + rank + ',再战一局？'; 
+            let string = "您当场排名" + rank + ',再战一局？';
             this.setStatusInfo(string);
         }
     },
-    clickStartBtn(){
+    clickStartBtn() {
         NetCtrl.createNewSocket(() => {
             if (G.accountType === Cmd.ACCOUNT_TYPE_WX) {
                 this.sendLogonWXOpenID();
             } else {
                 this.sendLogonVisitorMsg();
             }
-         }); 
+        });
     },
     sendLogonVisitorMsg() {
         var msg = {};
         msg.userID = G.userInfo.userID;
+        msg.name = G.userInfo.name;
         NetCtrl.send(Cmd.MDM_MB_LOGON, Cmd.SUB_MB_LOGON_VISITOR, msg);
     },
     sendLogonWXOpenID() {
@@ -60,23 +64,23 @@ cc.Class({
         msg.openID = G.userInfo.openID;
         NetCtrl.send(Cmd.MDM_MB_LOGON, Cmd.SUB_MB_LOGON_WX_OPENID, msg);
     },
-    clockCallback(){
+    clockCallback() {
         this.count--;
+        this.clockLabel.string = 'Start' + this.count;
         if (this.count === 0) {
-            this.unschedule(this.callback);
+            this.unschedule(this.clockCallback);
             this.setStatusInfo("可以开始了");
-            this.clockLabel.string='Start';
+            this.clockLabel.string = 'Start';
             this.startBtn.interactable = true;
         }
-        this.clockLabel.string = this.count;
     },
-    setStatusInfo(string){
+    setStatusInfo(string) {
         this.statusLabel.string = string;
     },
     setLeftClock(leftTime) {
         this.unschedule(this.clockCallback);
         this.count = leftTime;
-        this.clockLabel.string = 'Start'+this.count;
+        this.clockLabel.string = 'Start' + this.count;
         this.clockLabel.node.active = true;
         this.schedule(this.clockCallback, 1);
     },

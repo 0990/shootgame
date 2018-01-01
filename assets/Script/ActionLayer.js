@@ -25,7 +25,7 @@ cc.Class({
         // }, this);
         this.node.on(cc.Node.EventType.TOUCH_START, function (event) {
             if (this._managerJS) {
-                this._managerJS.shootBullet(event.getLocationX(), event.getLocationY());
+                this._managerJS.sendShootMessage(event.getLocationX(), event.getLocationY());
             }
         }, this);
         // add key down and key up event
@@ -38,7 +38,7 @@ cc.Class({
             this._managerJS.sendShootMessage();
         }
     },
-    clickJump(){
+    clickJump() {
         if (this._managerJS) {
             this._managerJS.sendJumpMessage();
         }

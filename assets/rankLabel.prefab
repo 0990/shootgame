@@ -41,8 +41,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 117.87,
-      "height": 40
+      "width": 73.67,
+      "height": 25
     },
     "_rotationX": 0,
     "_rotationY": 0,
@@ -69,9 +69,9 @@
     },
     "_enabled": true,
     "_useOriginalSize": false,
-    "_actualFontSize": 40,
-    "_fontSize": 40,
-    "_lineHeight": 40,
+    "_actualFontSize": 25,
+    "_fontSize": 25,
+    "_lineHeight": 25,
     "_enableWrapText": true,
     "_N$file": null,
     "_isSystemFontUsed": true,
@@ -88,7 +88,7 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "1a78043b-6c75-4903-95f3-afe2940454ab"
     },
     "fileId": "f9q8DXJ+5M2JP8PCXQmsv6",
     "sync": false

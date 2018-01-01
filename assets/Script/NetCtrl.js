@@ -18,6 +18,7 @@ var NetControl = {
         }
     },
     close: function () {
+        this.activeClose = true;
         if (this._socket && cc.sys.isObjectValid(this._socket)) {
             this._socket.close();
         }
@@ -40,6 +41,7 @@ var NetControl = {
         }
         this._socket = new WebSocket(Config.logonHost + ":" + Config.logonPort, Config.wsProtocol);
         this._socket.onopen = () => {
+            this.activeClose = false;
             if (callback) {
                 callback(num);
             }
@@ -56,7 +58,11 @@ var NetControl = {
     },
     _onClose: function (event) {
         cc.log(event);
-        this.fire("socketclose", event);
+        if (!this.activeClose) {
+            G.gameEnd = { overReason: Cmd.OVER_REASON_OFFLINE };
+            cc.director.loadScene('end');
+        }
+        // this.fire("socketclose", event);
     },
     _onMessage: function (obj) {
         var msg = JSON.parse(obj.data);
@@ -83,7 +89,7 @@ var NetControl = {
                     case Cmd.SUB_MB_LOGON_FAILURE:
                         {
                             cc.log("logon failed");
-                            this.fire('logonfail',msg);
+                            this.fire('logonfail', msg);
                             break;
                         }
                 }

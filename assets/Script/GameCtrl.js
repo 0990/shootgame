@@ -20,6 +20,7 @@ cc.Class({
         serverReconciliation: false,
         interpolation: false,
         bulletClip: cc.AudioClip,
+        bombClip: cc.AudioClip,
     },
     // use this for initialization
     onLoad: function () {
@@ -94,7 +95,7 @@ cc.Class({
         this.entityLayer.removeAllChildren();
         this.bulletLayer.removeAllChildren();
         this.lastShootTime = 0;
-        NetCtrl.send(Cmd.MDM_GF_GAME,Cmd.SUB_MB_GAME_SCENE);
+        NetCtrl.sendCmd(Cmd.MDM_GF_GAME, Cmd.SUB_MB_GAME_SCENE);
     },
     entityDied(node) {
         this.entityPool.put(node);
@@ -102,8 +103,9 @@ cc.Class({
     onGameMessage: function (msg) {
         msg = msg.detail;
         var data = msg.data;
+        if (this.sceneReady === false && msg.subID !== Cmd.SUB_MB_GAME_SCENE) return;
         switch (msg.subID) {
-            case Cmd.SUB_MB_GAME_SCENE:{
+            case Cmd.SUB_MB_GAME_SCENE: {
                 this.sceneReady = true;
                 this._showingLayerJS.setLeftClock(data.leftTime);
                 for (let i = 0; i < data.entities.length; i++) {
@@ -119,6 +121,7 @@ cc.Class({
                         } else {
                             let itemJS = this.entityMap.get(entityID);
                             itemJS.playDeadAni();
+                            this.playBombEffect(entityID);
                             this.entityMap.delete(entityID);
                         }
                     }
@@ -196,9 +199,7 @@ cc.Class({
             }
             case Cmd.SUB_MB_SHOOT: {
                 this.createBullet(data);
-               // if (data.creatorID === G.entityID) {
-                    cc.audioEngine.playEffect(this.bulletClip, false);
-              //  }
+                this.playBulletEffect(data.creatorID);
                 break;
             }
             case Cmd.SUB_MB_GAME_END: {
@@ -207,59 +208,44 @@ cc.Class({
                 NetCtrl.close();
                 //play anim and turn to "end" scene
                 G.gameEnd = data;
-                if(data.overReason===Cmd.OVER_REASON_KILLED){
+                if (data.overReason === Cmd.OVER_REASON_KILLED) {
                     this.entityMap.get(G.entityID).playDeadAni();
-                }else{
-                    for(let i=0;i<data.rankInfo.length;i++){
+                    this.playBombEffect(G.entityID);
+                } else {
+                    for (let i = 0; i < data.rankInfo.length; i++) {
                         let item = data.rankInfo[i];
                         item.name = this.entityMap.get(item.entityID).name;
                     }
                     cc.director.loadScene('end');
                 }
-                //cc.director.loadScene('end');
-                // if (data.overReason === Cmd.OVER_REASON_KILLED) {
-                //     //show ghost start mode
-                //     this._startLayerJS.hideNameEditLayer();
-                //     if (data.ghostDead) {
-                //         //this._startLayerJS.hideStartBtn();
-                //         // this._startLayerJS.setLeftClock(data.leftTime);
-                //        // this._startLayerJS.show("您已阵亡，下场在战!");
-                //        // this._startLayerJS.showStartBtn();
-                //     } else if (data.dead) {
-                //         //this._startLayerJS.showStartBtn();
-                //        // this._startLayerJS.show("还魂报仇(注意：您已阵亡，将不参与排名)！");
-                //     }
-                // } else {
-                //     //game over and show rank
-                //     let string = "";
-                //     if (G.dead) {
-                //         string = "当场您未存活，未有排行,再战一局？";
-                //     } else {
-                //         let rank = 0;
-                //         for (let i = 0; i < data.rankInfo.length; i++) {
-                //             let item = data.rankInfo[i];
-                //             if (item.entityID === G.entityID) {
-                //                 rank = item.rank;
-                //                 break;
-                //             }
-                //         }
-                //         string = "您当场排名" + rank + ',再战一局？';
-                //     }
-
-                //     //this._startLayerJS.showStartBtn();
-                //     //this._startLayerJS.showNameEditLayer();
-                //     //this._startLayerJS.show(string);
-                // }
-                // this.bulletLayer.active = false;
-                // this.entityLayer.active = false;
-                // this._actionLayerJS.hide();
-                // this.activeClose = true;
-                // G.entityID = -1;
-                // NetCtrl.close();
                 break;
             }
         }
         return;
+    },
+    playBulletEffect(creatorID) {
+        let nodeA = this.entityMap.get(creatorID).node;
+        let nodeB = this.entityMap.get(G.entityID).node;
+        let distance = cc.pDistance(nodeA.position, nodeB.position);
+        if (distance <= 600) {
+            let volume = 1.0;
+            if (distance > 200) {
+                volume = 200 / distance;
+            }
+            cc.audioEngine.play(this.bulletClip, false, volume);
+        }
+    },
+    playBombEffect(entityID) {
+        let nodeA = this.entityMap.get(entityID).node;
+        let nodeB = this.entityMap.get(G.entityID).node;
+        let distance = cc.pDistance(nodeA.position, nodeB.position);
+        if (distance <= 600) {
+            let volume = 1.0;
+            if (distance > 200) {
+                volume = 200 / distance;
+            }
+            cc.audioEngine.play(this.bombClip, false, volume);
+        }
     },
     onDestroy: function () {
         this.node.off('gamemessage', this.onGameMessage, this);
@@ -338,6 +324,7 @@ cc.Class({
         });
     },
     lateUpdate: function (dt) {
+        if (this.sceneReady === false) return;
         let meNode = this.entityMap.get(G.entityID).node;
         let targetPos = this.entityMap.get(G.entityID).node.convertToWorldSpaceAR(cc.Vec2.ZERO);
         if (meNode.x < 640) {
@@ -384,18 +371,18 @@ cc.Class({
         }
 
         let meRank = 0;
-       // let string = "";
-       // if (G.dead) {
+        // let string = "";
+        // if (G.dead) {
         //    string = "已阵亡无排名";
-       // } else {
-            for (let i = 0; i < objArr.length; i++) {
-                if (objArr[i].entityID === G.entityID) {
-                    meRank = i + 1;
-                    break;
-                }
+        // } else {
+        for (let i = 0; i < objArr.length; i++) {
+            if (objArr[i].entityID === G.entityID) {
+                meRank = i + 1;
+                break;
             }
-       let  string = "我是第" + meRank + "名" + objArr[meRank - 1].score + "分";
-       // }
+        }
+        let string = "我是第" + meRank + "名" + objArr[meRank - 1].score + "分";
+        // }
         this._showingLayerJS.setMeRank(string);
     },
 });
