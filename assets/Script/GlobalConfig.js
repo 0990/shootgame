@@ -1,3 +1,13 @@
+window.G = {
+    userInfo:null,
+    entityID: -1,
+    rotationDelta: 20,
+    gameStartTime: -1,
+    accountType: -1,
+    code:null,
+    openID:null,
+}
+
 module.exports = {
     debugMode: false,
     logonHost: "ws://192.168.0.100",

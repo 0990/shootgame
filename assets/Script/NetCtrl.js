@@ -63,24 +63,30 @@ var NetControl = {
         var data = msg.data;
         switch (msg.mainID) {
             case Cmd.MDM_MB_LOGON: {
-                this.fire('logon',msg);
-                // switch (msg.subID) {
-                //     case Cmd.SUB_MB_LOGON_SUCCESS:
-                //         {
-                //             cc.log("logon success");
-                //             G = data;
-                //             let userData = {
-                //                 entityID: data.entityID,
-                //             };
-                //             cc.sys.localStorage.setItem('visitorData', JSON.stringify(userData));
-                //         }
-                //         break;
-                //     case Cmd.SUB_MB_LOGON_FAILURE:
-                //         {
-                //             cc.log("logon failed");
-                //             break;
-                //         }
-                // }
+                //this.fire('logon',msg);
+                switch (msg.subID) {
+                    case Cmd.SUB_MB_LOGON_SUCCESS:
+                        {
+                            cc.log("logon success");
+                            //G.userInfo = data.entityInfo;
+                            //G.config = data.config;
+                            //G.entityID = G.userInfo.entityID;
+                            G = data;
+                            let userData = {
+                                userID: G.userInfo.userID,
+                                name: G.userInfo.name,
+                            };
+                            cc.sys.localStorage.setItem('visitorData', JSON.stringify(userData));
+                            cc.director.loadScene('game');
+                        }
+                        break;
+                    case Cmd.SUB_MB_LOGON_FAILURE:
+                        {
+                            cc.log("logon failed");
+                            this.fire('logonfail',msg);
+                            break;
+                        }
+                }
                 break;
             }
             case Cmd.MDM_GF_GAME: {
@@ -121,10 +127,8 @@ var NetControl = {
         });
     },
     sendCmd(mainID, subID) {
-        this.connect(() => {
-            let msg = { userID: G.userInfo.userID };
-            this.send(mainID, subID, msg);
-        });
+        let msg = {};
+        this.send(mainID, subID, msg);
     }
 };
 module.exports = NetControl;

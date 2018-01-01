@@ -33,21 +33,9 @@ cc.Class({
 
     // onLoad () {},
 
-    start() {
+    start () {
 
     },
-    init(info) {
-        this.node.x = info.x;
-        this.node.y = info.y;
-        this.rotation = info.rotation;
-        this.bulletID = info.bulletID;
-        this.creatorID = info.creatorID;
-        this.createTime = new Date().getTime();
-        this.radian = this.rotation * Math.PI / 180;
-    },
 
-    update(dt) {
-        this.node.x += G.config.bulletSpeed * dt * Math.cos(this.radian);
-        this.node.y += G.config.bulletSpeed * dt * Math.sin(this.radian);
-    },
+    // update (dt) {},
 });

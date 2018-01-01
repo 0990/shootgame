@@ -51,21 +51,21 @@ cc.Class({
         if (rotationDelta >= 180) {
             rotationDelta = Math.abs(360 - rotationDelta);
         }
-        if (rotationDelta <= pressTime * G.rotationDelta) {
+        if (rotationDelta <= pressTime * G.config.rotationDelta) {
             newRotation = targetRotation;
         } else {
             let rotationChange = 0;
             if (this.rotation >= 0) {
                 if (this.rotation - 180 < targetRotation && targetRotation < this.rotation) {
-                    rotationChange = -pressTime * G.rotationDelta;
+                    rotationChange = -pressTime * G.config.rotationDelta;
                 } else {
-                    rotationChange = pressTime * G.rotationDelta;
+                    rotationChange = pressTime * G.config.rotationDelta;
                 }
             } else {
                 if (this.rotation < targetRotation && targetRotation < this.rotation + 180) {
-                    rotationChange = pressTime * G.rotationDelta;
+                    rotationChange = pressTime * G.config.rotationDelta;
                 } else {
-                    rotationChange = -pressTime * G.rotationDelta;;
+                    rotationChange = -pressTime * G.config.rotationDelta;;
                 }
             }
             newRotation = lastRotation + rotationChange;
@@ -74,21 +74,12 @@ cc.Class({
         if (newRotation > 180) newRotation = newRotation - 360;
         if (newRotation < -180) newRotation = 360 + newRotation;
 
-        let distance = input.pressTime * G.entitySpeed;
+        let distance = input.pressTime * G.config.entitySpeed;
         let radian = lastRotation * Math.PI / 180;
         this.node.y += distance * Math.sin(radian);
         this.node.x += distance * Math.cos(radian);
         this.rotation = newRotation;
         this.node.rotation = -this.rotation;
-        // this.displayDirection(this.rotation);
-    },
-    // update() {
-    //     let radian = -this.rotation * Math.PI / 180;
-    //     this.directionNode.x = (G.entityRadius + 8) * Math.cos(radian);
-    //     this.directionNode.y = (G.entityRadius + 8) * Math.sin(radian);
-    // },
-    displayDirection(rotation) {
-
     },
     init(info) {
         // this.entityID = info.entityID;
@@ -100,11 +91,12 @@ cc.Class({
         this.node.color = cc.Color.WHITE;
         this.name = info.name;
         this.nameLabel.string = info.name;
-        if (info.ghostMode) {
-            this.node.opacity = 80;
-        } else {
+       // if (info.ghostMode) {
+       //     this.node.opacity = 80;
+       // } else {
             this.startProtect();
-        }
+       // }
+        this.entityID = info.entityID;
         this.dead = info.dead;
         this.applyDisplay(info);
         if (info.accountType === 2) {
@@ -113,20 +105,6 @@ cc.Class({
             this.avatarSprite.spriteFrame = this.defaultFrame;
         }
     },
-    // applyInfo(info) {
-    //     // this.entityID = info.entityID;
-    //     this.hp = info.hp;
-    //     let color = cc.Color.WHITE;
-    //     if (this.hp < 2) {
-    //         color = cc.Color.RED;
-    //     } else if (this.hp < 4) {
-    //         color = cc.Color.YELLOW;
-    //     } else {
-    //         color = cc.Color.GREEN;
-    //     }
-    //     this.node.color = color;
-    //     this.rotation = info.rotation;
-    // },
     applyDisplay(data) {
         this.hp = data.hp;
         this.score = data.score;
@@ -144,7 +122,7 @@ cc.Class({
     startProtect() {
         this.scheduleOnce(() => {
             cc.log("protect cancel");
-        }, G.protectTime);
+        }, G.config.protectTime);
     },
     playDeadAni() {
         var anim = this.avatarSprite.getComponent(cc.Animation);
@@ -155,7 +133,11 @@ cc.Class({
         cc.audioEngine.playEffect(this.deadClip, false);
     },
     onFinished() {
-        this._managerJS.entityDied(this.node);
+        if(this.entityID===G.entityID){
+            cc.director.loadScene('end');
+        }else{
+            this._managerJS.entityDied(this.node);
+        }
     }
 
 });

@@ -35,7 +35,7 @@ cc.Class({
     },
     clickShoot() {
         if (this._managerJS) {
-            this._managerJS.shootBullet();
+            this._managerJS.sendShootMessage();
         }
     },
     clickJump(){

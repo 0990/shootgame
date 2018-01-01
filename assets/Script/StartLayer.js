@@ -9,12 +9,13 @@
 //  - [English] http://www.cocos2d-x.org/docs/editors_and_tools/creator-chapters/scripting/life-cycle-callbacks/index.html
 var NetCtrl = require('NetCtrl');
 var Cmd = require('CmdLogon');
+var Util = require('Util');
 cc.Class({
     extends: cc.Component,
 
     properties: {
         statusInfoLabel: cc.Label,
-        startBtnNode: cc.Node,
+        startBtn: cc.Button,
         nameEditLayer: cc.Node,
         nameEditBox: cc.EditBox,
         clockLabel: cc.Label,
@@ -37,8 +38,7 @@ cc.Class({
 
     // LIFE-CYCLE CALLBACKS:
     onLoad() {
-        // if (cc.sys.browserType === cc.sys.BROWSER_TYPE_WECHAT) {
-        let code = this.getQueryString('code');
+        let code = Util.getQueryString('code');        
         if (code) {
             let msg = {};
             msg.code = code;
@@ -51,56 +51,43 @@ cc.Class({
                 this.nameEditBox.string = localData.name;
             }
         }
+
+        NetCtrl.dataEventHandler = this.node;
+        this.node.on('logonfail',this.onLogonFail,this);
     },
-    setStatusInfo(info) {
-        this.statusInfoLabel.string = info;
-    },
-    show(info) {
-        if (typeof (info) !== undefined) {
-            this.statusInfoLabel.string = info;
-        }
-        this.node.active = true;
-    },
-    hide() {
-        this.node.active = false;
+    onLogonFail(msg){
+        msg = msg.detail;
+        let data = msg.data;
+        this.startBtn.interactable = false;
+        this.setLeftClock(data.leftTime);
+        this.statusInfoLabel.string = "Game Over,Wait For Next Round!";
     },
     //登录
     clickStartBtn() {
         NetCtrl.createNewSocket(() => {
-            if (G.accountType === Cmd.ACCOUNT_TYPE_WX) {
-                this.sendLogonWXOpenID();
-            } else {
+           // if (G.accountType === Cmd.ACCOUNT_TYPE_WX) {
+           //     this.sendLogonWXOpenID();
+           // } else {
                 this.sendLogonVisitorMsg();
-            }
+          //  }
         });
     },
-    hideNameEditLayer() {
-        this.nameEditLayer.active = false;
-    },
-    showNameEditLayer() {
-        this.nameEditLayer.active = true;
-    },
-    showStartBtn() {
-        this.startBtnNode.active = true;
-    },
-    hideStartBtn() {
-        this.startBtnNode.active = false;
+    clockCallback(){
+        this.count--;
+        if (this.count === 0) {
+            this.unschedule(this.callback);
+            this.setStatusInfo("可以开始了");
+            this.clockLabel.string = 'Start';
+            this.startBtn.interactable = true;
+        }
+        this.clockLabel.string = this.count;
     },
     setLeftClock(leftTime) {
-        // this.count = leftTime;
-        // this.clockLabel.string = this.count;
-        // this.clockLabel.node.active = true;
-        // this.callback = function () {
-        //     this.count--;
-        //     if (this.count === 0) {
-        //         this.unschedule(this.callback);
-        //         this.setStatusInfo("可以开始了");
-        //         this.showStartBtn();
-        //         this.clockLabel.node.active = false;
-        //     }
-        //     this.clockLabel.string = this.count;
-        // }
-        // this.schedule(this.callback, 1);
+        this.unschedule(this.clockCallback);
+        this.count = leftTime;
+        this.clockLabel.string = 'Start'+this.count;
+        this.clockLabel.node.active = true;
+        this.schedule(this.clockCallback, 1);
     },
     sendLogonVisitorMsg() {
         let localData = JSON.parse(cc.sys.localStorage.getItem('visitorData'));
@@ -118,9 +105,7 @@ cc.Class({
         msg.openID = G.openID;
         NetCtrl.send(Cmd.MDM_MB_LOGON, Cmd.SUB_MB_LOGON_WX_OPENID, msg);
     },
-    getQueryString(name) {
-        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
-        var r = window.location.search.substr(1).match(reg);
-        if (r != null) return unescape(r[2]); return null;
+    onDestroy(){
+        this.node.off('logonfail',this.onLogonFail,this);
     }
 });
