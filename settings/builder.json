@@ -1,13 +1,14 @@
 {
   "appKey": "",
   "appSecret": "",
-  "encryptJs": true,
   "excludeScenes": [],
   "includeAnySDK": false,
   "includeSDKBox": false,
+  "includeSdk": [
+    "anysdk"
+  ],
   "inlineSpriteFrames": true,
-  "inlineSpriteFrames_native": true,
-  "jailbreakPlatform": false,
+  "inlineSpriteFrames_native": false,
   "md5Cache": true,
   "mergeStartScene": false,
   "oauthLoginServer": "",
@@ -21,12 +22,7 @@
   "packageName": "org.cocos2d.helloworld",
   "privateKey": "",
   "renderMode": "0",
-  "startScene": "2d2f792f-a40c-49bb-a189-ed176a246e49",
+  "startScene": "991efca1-4933-478e-b0b0-00c9e48fbbf6",
   "title": "shootGame",
-  "webOrientation": "landscape",
-  "wechatgame": {
-    "appid": "",
-    "orientation": "portrait"
-  },
-  "xxteaKey": "de2b0cd2-35fb-4d"
+  "webOrientation": "landscape"
 }
