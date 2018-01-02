@@ -26,6 +26,8 @@ cc.Class({
         } else if (gameEnd.overReason === Cmd.OVER_REASON_KILLED) {
             this.setStatusInfo('Killed! Wait For Next Round');
             this.startBtn.interactable = false;
+            this.leftTime = gameEnd.leftTime;
+            this.failTime = new Date().getTime();
             this.setLeftClock(gameEnd.leftTime);
         } else {
             let rank = 0;
@@ -65,13 +67,15 @@ cc.Class({
         NetCtrl.send(Cmd.MDM_MB_LOGON, Cmd.SUB_MB_LOGON_WX_OPENID, msg);
     },
     clockCallback() {
-        this.count--;
-        this.clockLabel.string = 'Start' + this.count;
-        if (this.count === 0) {
+        let count = parseInt(this.leftTime - (new Date().getTime() - this.failTime) / 1000);
+        //this.count--;
+        if (this.count <= 0) {
             this.unschedule(this.clockCallback);
             this.setStatusInfo("可以开始了");
             this.clockLabel.string = 'Start';
             this.startBtn.interactable = true;
+        } else {
+            this.clockLabel.string = 'Start' + count;
         }
     },
     setStatusInfo(string) {
@@ -79,9 +83,9 @@ cc.Class({
     },
     setLeftClock(leftTime) {
         this.unschedule(this.clockCallback);
-        this.count = leftTime;
-        this.clockLabel.string = 'Start' + this.count;
-        this.clockLabel.node.active = true;
+        // this.count = leftTime;
+        this.clockLabel.string = 'Start' + this.leftTime;
+        //  this.clockLabel.node.active = true;
         this.schedule(this.clockCallback, 1);
     },
 });

@@ -59,6 +59,8 @@ cc.Class({
         msg = msg.detail;
         let data = msg.data;
         this.startBtn.interactable = false;
+        this.failTime = new Date().getTime();
+        this.leftTime = data.leftTime;
         this.setLeftClock(data.leftTime);
         this.statusInfoLabel.string = "Game Over,Wait For Next Round!";
     },
@@ -73,13 +75,14 @@ cc.Class({
         });
     },
     clockCallback() {
-        this.count--;
-        this.clockLabel.string = 'Start' + this.count;
-        if (this.count === 0) {
+        let count = parseInt(this.leftTime - (new Date().getTime() - this.failTime) / 1000);
+        if (count <= 0) {
             this.unschedule(this.clockCallback);
             this.setStatusInfo("可以开始了");
             this.clockLabel.string = 'Start';
             this.startBtn.interactable = true;
+        } else {
+            this.clockLabel.string = 'Start' + count;
         }
     },
     setStatusInfo(string) {
@@ -87,9 +90,7 @@ cc.Class({
     },
     setLeftClock(leftTime) {
         this.unschedule(this.clockCallback);
-        this.count = leftTime;
-        this.clockLabel.string = 'Start' + this.count;
-        this.clockLabel.node.active = true;
+        this.clockLabel.string = 'Start' + this.leftTime;
         this.schedule(this.clockCallback, 1);
     },
     sendLogonVisitorMsg() {
