@@ -69,7 +69,7 @@ cc.Class({
     clockCallback() {
         let count = parseInt(this.leftTime - (new Date().getTime() - this.failTime) / 1000);
         //this.count--;
-        if (this.count <= 0) {
+        if (count <= 0) {
             this.unschedule(this.clockCallback);
             this.setStatusInfo("可以开始了");
             this.clockLabel.string = 'Start';

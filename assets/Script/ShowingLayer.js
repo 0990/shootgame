@@ -14,6 +14,7 @@ cc.Class({
     properties: {
         clockLabel: cc.Label,
         rankLayer: cc.Node,
+        killCountNode: cc.Label,
         // foo: {
         //     // ATTRIBUTES:
         //     default: null,        // The default value will be used only when the component attaching
@@ -45,6 +46,11 @@ cc.Class({
     },
     start() {
 
+    },
+    showKillCount(count) {
+        this.killCountNode.getComponent(cc.Label).string = count + "杀！";
+        let anim = this.killCountNode.getComponent(cc.Animation);
+        anim.play();
     },
     setLeftClock(leftTime) {
         this.unschedule(this.callback);

@@ -40,7 +40,7 @@ cc.Class({
         this.node.x = info.x;
         this.node.y = info.y;
         this.rotation = info.rotation;
-        this.node.rotation = -this.rotation;
+        this.node.rotation = -this.rotation + 180;
         this.bulletID = info.bulletID;
         this.creatorID = info.creatorID;
         this.createTime = new Date().getTime();

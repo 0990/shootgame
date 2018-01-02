@@ -17,8 +17,10 @@ cc.Class({
         scoreLabel: cc.Label,
         avatarSprite: cc.Sprite,
         defaultFrame: cc.SpriteFrame,
-        directionNode: cc.Node,
-       // deadClip: cc.AudioClip,
+        greenFrame: cc.SpriteFrame,
+        yellowFrame: cc.SpriteFrame,
+        redFrame: cc.SpriteFrame,
+        // deadClip: cc.AudioClip,
     },
 
     // use this for initialization
@@ -91,11 +93,11 @@ cc.Class({
         this.node.color = cc.Color.WHITE;
         this.name = info.name;
         this.nameLabel.string = info.name;
-       // if (info.ghostMode) {
-       //     this.node.opacity = 80;
-       // } else {
-            this.startProtect();
-       // }
+        // if (info.ghostMode) {
+        //     this.node.opacity = 80;
+        // } else {
+        this.startProtect();
+        // }
         this.entityID = info.entityID;
         this.dead = info.dead;
         this.applyDisplay(info);
@@ -110,11 +112,11 @@ cc.Class({
         this.score = data.score;
         let color = cc.Color.WHITE;
         if (this.hp <= 2) {
-            color = cc.Color.RED;
+            this.getComponent(cc.Sprite).spriteFrame = this.redFrame;
         } else if (this.hp <= 4) {
-            color = cc.Color.YELLOW;
+            this.getComponent(cc.Sprite).spriteFrame = this.yellowFrame;
         } else {
-            color = cc.Color.GREEN;
+            this.getComponent(cc.Sprite).spriteFrame = this.greenFrame;
         }
         this.avatarSprite.node.color = color;
         this.scoreLabel.string = this.score;
@@ -133,9 +135,9 @@ cc.Class({
         //cc.audioEngine.playEffect(this.deadClip, false);
     },
     onFinished() {
-        if(this.entityID===G.entityID){
+        if (this.entityID === G.entityID) {
             cc.director.loadScene('end');
-        }else{
+        } else {
             this._managerJS.entityDied(this.node);
         }
     }

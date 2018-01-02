@@ -142,6 +142,9 @@ cc.Class({
                     for (let i = 0; i < data.entityChangeList.length; i++) {
                         let item = data.entityChangeList[i];
                         let itemJS = this.entityMap.get(item.entityID);
+                        if (item.entityID === G.entityID && item.score !== itemJS.score) {
+                            this._showingLayerJS.showKillCount(item.score);
+                        }
                         itemJS.applyDisplay(item);
                     }
                 }
@@ -227,10 +230,10 @@ cc.Class({
         let nodeA = this.entityMap.get(creatorID).node;
         let nodeB = this.entityMap.get(G.entityID).node;
         let distance = cc.pDistance(nodeA.position, nodeB.position);
-        if (distance <= 600) {
+        if (distance <= 500) {
             let volume = 1.0;
-            if (distance > 200) {
-                volume = 200 / distance;
+            if (distance > 100) {
+                volume = 100 / distance;
             }
             cc.audioEngine.play(this.bulletClip, false, volume);
         }
@@ -239,10 +242,10 @@ cc.Class({
         let nodeA = this.entityMap.get(entityID).node;
         let nodeB = this.entityMap.get(G.entityID).node;
         let distance = cc.pDistance(nodeA.position, nodeB.position);
-        if (distance <= 600) {
+        if (distance <= 500) {
             let volume = 1.0;
-            if (distance > 200) {
-                volume = 200 / distance;
+            if (distance > 100) {
+                volume = 100 / distance;
             }
             cc.audioEngine.play(this.bombClip, false, volume);
         }
