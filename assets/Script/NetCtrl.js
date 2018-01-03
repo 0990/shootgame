@@ -77,19 +77,37 @@ var NetControl = {
                             //G.userInfo = data.entityInfo;
                             //G.config = data.config;
                             //G.entityID = G.userInfo.entityID;
-                            G = data;
-                            let userData = {
-                                userID: G.userInfo.userID,
-                                name: G.userInfo.name,
-                            };
-                            cc.sys.localStorage.setItem('visitorData', JSON.stringify(userData));
-                            cc.director.loadScene('game');
+                            // G = data;
+                            // let userData = {
+                            //     userID: G.userInfo.userID,
+                            //     name: G.userInfo.name,
+                            // };
+                            // cc.sys.localStorage.setItem('visitorData', JSON.stringify(userData));
+                            G.userID = data.userID;
+                            this.fire('logonsuccess', msg);
+                            this.close();
+                            //cc.director.loadScene('game');
+                            break;
                         }
-                        break;
                     case Cmd.SUB_MB_LOGON_FAILURE:
                         {
                             cc.log("logon failed");
-                            this.fire('logonfail', msg);
+                            this.close();
+                            // this.fire('logonfail', msg);
+                            break;
+                        }
+                    case Cmd.SUB_MB_JOIN_GAME_SUCCESS:
+                        {
+                            G.userInfo = data.userInfo;
+                            G.config = data.config;
+                            G.entityID = data.entityID;
+                            cc.director.loadScene('game');
+                            break;
+                        }
+                    case Cmd.SUB_MB_JOIN_GAME_FAILURE:
+                        {
+                            this.fire('joinfail', msg);
+                            this.close();
                             break;
                         }
                 }

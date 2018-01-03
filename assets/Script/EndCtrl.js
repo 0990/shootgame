@@ -55,6 +55,13 @@ cc.Class({
             }
         });
     },
+    clickJoinGame() {
+        NetCtrl.createNewSocket(() => {
+            var msg = {};
+            msg.userID = G.userID;
+            NetCtrl.send(Cmd.MDM_MB_LOGON, Cmd.SUB_MB_JOIN_GAME, msg);
+        });
+    },
     sendLogonVisitorMsg() {
         var msg = {};
         msg.userID = G.userInfo.userID;

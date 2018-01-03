@@ -95,6 +95,7 @@ cc.Class({
         this.entityLayer.removeAllChildren();
         this.bulletLayer.removeAllChildren();
         this.lastShootTime = 0;
+        this.pressTime = 0;
         NetCtrl.sendCmd(Cmd.MDM_GF_GAME, Cmd.SUB_MB_GAME_SCENE);
     },
     entityDied(node) {
@@ -209,6 +210,7 @@ cc.Class({
                 this.unschedule(this.calculateRank);
                 this._actionLayerJS.hide();
                 NetCtrl.close();
+                this.sceneReady = false;
                 //play anim and turn to "end" scene
                 G.gameEnd = data;
                 if (data.overReason === Cmd.OVER_REASON_KILLED) {
@@ -228,13 +230,23 @@ cc.Class({
         return;
     },
     playGameEnd() {
-        this.schedule(this.scheduleCamera, 0.01);
+        this.schedule(this.scheduleCamera, 0.02);
     },
     scheduleCamera() {
-        this.camera.zoomRatio -= 0.02;
-        if (this.camera.zoomRatio <= 0.5) {
+        let targetPos = {};
+        targetPos.x = 1280;
+        targetPos.y = 720;
+        let position = this.camera.parent.convertToNodeSpaceAR(targetPos);
+        this.camera.x = (position.x + this.camera.x) / 2;
+        this.camera.y = (position.y + this.camera.y) / 2;
+        let camera = this.camera.getComponent(cc.Camera);
+        //  cc.log(camera.zoomRatio);
+        camera.zoomRatio -= 0.02;
+        if (camera.zoomRatio <= 0.5) {
             this.unschedule(this.scheduleCamera);
-            cc.director.loadScene('end');
+            this.scheduleOnce(function () {
+                cc.director.loadScene('end');
+            }, 1.5);
         }
     },
     playBulletEffect(creatorID) {
@@ -274,8 +286,15 @@ cc.Class({
     },
     processInputs(dt) {
         let targetRotation = this._actionLayerJS.getTargetRotation();
-        if (targetRotation == null) return;
-        let input = { pressTime: dt };
+        if (targetRotation == null) {
+            this.pressTime = 0;
+            return;
+        }
+        this.pressTime = dt;
+        // if (this.pressTime < 0.1) return;
+        let input = { pressTime: this.pressTime };
+        //this.pressTime = 0;
+        //  let input = { pressTime: dt };
         input.targetRotation = targetRotation;
         input.inputSequenceNumber = this.inputSequenceNumber++;
         input.entityID = G.entityID;

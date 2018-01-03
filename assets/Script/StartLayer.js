@@ -52,10 +52,15 @@ cc.Class({
             }
         }
 
+        this.startBtn.interactable = false;
         NetCtrl.dataEventHandler = this.node;
-        this.node.on('logonfail', this.onLogonFail, this);
+        this.node.on('joinfail', this.onJoinFail, this);
+        this.node.on('logonsuccess', this.onLogonSuccess, this);
+        NetCtrl.createNewSocket(() => {
+            this.sendLogonVisitorMsg();
+        });
     },
-    onLogonFail(msg) {
+    onJoinFail(msg) {
         msg = msg.detail;
         let data = msg.data;
         this.startBtn.interactable = false;
@@ -64,14 +69,43 @@ cc.Class({
         this.setLeftClock(data.leftTime);
         this.statusInfoLabel.string = "Game Over,Wait For Next Round!";
     },
-    //登录
-    clickStartBtn() {
+    onLogonSuccess(msg) {
+        msg = msg.detail;
+        let data = msg.data;
+        if (data.dead) {
+            this.startBtn.interactable = false;
+            this.statusInfoLabel.string = "Game Over,Wait For Next Round!";
+            this.failTime = new Date().getTime();
+            this.leftTime = data.leftTime;
+            this.setLeftClock(data.leftTime);
+        } else {
+            this.startBtn.interactable = true;
+            this.statusInfoLabel.string = "Click Start!";
+        }
+    },
+    sendLogonWX() {
+        var msg = {};
+        msg.code = "";
+        msg.name = "";
+        msg.avatarUrl = "";
+        NetCtrl.send(Cmd.MDM_MB_LOGON, Cmd.SUB_MB_LOGON_WX_GAME, msg);
+    },
+    // //登录
+    // clickStartBtn() {
+    //     NetCtrl.createNewSocket(() => {
+    //         // if (G.accountType === Cmd.ACCOUNT_TYPE_WX) {
+    //         //     this.sendLogonWXOpenID();
+    //         // } else {
+    //         this.sendLogonVisitorMsg();
+    //         //  }
+    //     });
+    // },
+    clickJoinGame() {
         NetCtrl.createNewSocket(() => {
-            // if (G.accountType === Cmd.ACCOUNT_TYPE_WX) {
-            //     this.sendLogonWXOpenID();
-            // } else {
-            this.sendLogonVisitorMsg();
-            //  }
+            var msg = {};
+            msg.userID = G.userID;
+            msg.name = this.nameEditBox.string;
+            NetCtrl.send(Cmd.MDM_MB_LOGON, Cmd.SUB_MB_JOIN_GAME, msg);
         });
     },
     clockCallback() {
@@ -110,6 +144,6 @@ cc.Class({
         NetCtrl.send(Cmd.MDM_MB_LOGON, Cmd.SUB_MB_LOGON_WX_OPENID, msg);
     },
     onDestroy() {
-        this.node.off('logonfail', this.onLogonFail, this);
+        this.node.off('joinfail', this.onJoinFail, this);
     }
 });

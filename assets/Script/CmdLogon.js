@@ -11,7 +11,8 @@ var constant = {
     SUB_MB_WX_LOGON_SECOND: 5,
     SUB_MB_LOGON_VISITOR: 6,
     SUB_MB_LOGON_WX_OPENID: 7,
-    SUB_MB_CHECK_STATUS: 9,
+    SUB_MB_LOGON_WX_GAME:8,
+    SUB_MB_JOIN_GAME: 9,
     //登录结果
     SUB_GP_LOGON_SUCCESS: 100,//登录成功
     SUB_GP_LOGON_FAILURE: 101,//登录失败
@@ -28,6 +29,9 @@ var constant = {
     //登录结果
     SUB_MB_LOGON_SUCCESS: 100,//登录成功
     SUB_MB_LOGON_FAILURE: 101,//登录失败
+
+    SUB_MB_JOIN_GAME_SUCCESS:102,
+    SUB_MB_JOIN_GAME_FAILURE:103,
 
     MDM_GF_GAME: 200,
 

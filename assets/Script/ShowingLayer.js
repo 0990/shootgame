@@ -15,6 +15,7 @@ cc.Class({
         clockLabel: cc.Label,
         rankLayer: cc.Node,
         killCountNode: cc.Label,
+        centerClockLabel: cc.Label,
         // foo: {
         //     // ATTRIBUTES:
         //     default: null,        // The default value will be used only when the component attaching
@@ -48,7 +49,7 @@ cc.Class({
 
     },
     showKillCount(count) {
-        this.killCountNode.getComponent(cc.Label).string = count + "杀！";
+        this.killCountNode.getComponent(cc.Label).string = count + "！";
         let anim = this.killCountNode.getComponent(cc.Animation);
         anim.play();
     },
@@ -59,8 +60,13 @@ cc.Class({
         this.clockLabel.node.active = true;
         this.callback = function () {
             this.count--;
+            if (this.count <= 5) {
+                this.centerClockLabel.node.active = true;
+                this.centerClockLabel.string = this.count;
+            }
             if (this.count === 0) {
                 this.unschedule(this.callback);
+                this.centerClockLabel.node.active = false;
                 this.clockLabel.node.active = false;
             }
             this.clockLabel.string = "倒计时:" + this.count;

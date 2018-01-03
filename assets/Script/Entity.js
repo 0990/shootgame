@@ -96,8 +96,11 @@ cc.Class({
         // if (info.ghostMode) {
         //     this.node.opacity = 80;
         // } else {
-        this.startProtect();
+        //this.startProtect();
         // }
+        if (info.new) {
+            this.getComponent(cc.Animation).play();
+        }
         this.entityID = info.entityID;
         this.dead = info.dead;
         this.applyDisplay(info);
