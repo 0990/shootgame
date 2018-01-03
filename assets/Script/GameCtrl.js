@@ -219,12 +219,23 @@ cc.Class({
                         let item = data.rankInfo[i];
                         item.name = this.entityMap.get(item.entityID).name;
                     }
-                    cc.director.loadScene('end');
+                    // cc.director.loadScene('end');
                 }
+                this.playGameEnd();
                 break;
             }
         }
         return;
+    },
+    playGameEnd() {
+        this.schedule(this.scheduleCamera, 0.01);
+    },
+    scheduleCamera() {
+        this.camera.zoomRatio -= 0.02;
+        if (this.camera.zoomRatio <= 0.5) {
+            this.unschedule(this.scheduleCamera);
+            cc.director.loadScene('end');
+        }
     },
     playBulletEffect(creatorID) {
         let nodeA = this.entityMap.get(creatorID).node;

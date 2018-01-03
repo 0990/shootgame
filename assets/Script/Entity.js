@@ -136,7 +136,7 @@ cc.Class({
     },
     onFinished() {
         if (this.entityID === G.entityID) {
-            cc.director.loadScene('end');
+            // cc.director.loadScene('end');
         } else {
             this._managerJS.entityDied(this.node);
         }
