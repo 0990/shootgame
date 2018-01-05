@@ -61,7 +61,7 @@ var NetControl = {
         if (!this.activeClose) {
             let sceneName = cc.director.getScene().name;
             if (sceneName === 'start') {
-                cc.log("网络连接失败，请检查网络");
+                G.alert("网络连接失败，请检查网络", G.AT.OK);
             } else {
                 G.gameEnd = { overReason: Cmd.OVER_REASON_OFFLINE };
                 cc.director.loadScene('end');
@@ -97,6 +97,7 @@ var NetControl = {
                     case Cmd.SUB_MB_LOGON_FAILURE:
                         {
                             cc.log("logon failed");
+                            G.alert("进入失败，请重新进入游戏", G.AT.OK);
                             this.close();
                             // this.fire('logonfail', msg);
                             break;
@@ -112,6 +113,7 @@ var NetControl = {
                     case Cmd.SUB_MB_JOIN_GAME_FAILURE:
                         {
                             this.fire('joinfail', msg);
+                            G.alert("加入失败，请重新进入游戏", G.AT.OK);
                             this.close();
                             break;
                         }

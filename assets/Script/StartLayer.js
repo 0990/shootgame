@@ -38,6 +38,7 @@ cc.Class({
 
     // LIFE-CYCLE CALLBACKS:
     onLoad() {
+       // G.alert("网络连接失败，请检查网络", G.AT.OK);
         if (cc.sys.platform === cc.sys.WECHAT_GAME) {
             wx.login({
                 success: function (info) {
