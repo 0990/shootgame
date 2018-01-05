@@ -59,8 +59,13 @@ var NetControl = {
     _onClose: function (event) {
         cc.log(event);
         if (!this.activeClose) {
-            G.gameEnd = { overReason: Cmd.OVER_REASON_OFFLINE };
-            cc.director.loadScene('end');
+            let sceneName = cc.director.getScene().name;
+            if (sceneName === 'start') {
+                cc.log("网络连接失败，请检查网络");
+            } else {
+                G.gameEnd = { overReason: Cmd.OVER_REASON_OFFLINE };
+                cc.director.loadScene('end');
+            }
         }
         // this.fire("socketclose", event);
     },

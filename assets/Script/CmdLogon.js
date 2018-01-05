@@ -13,6 +13,7 @@ var constant = {
     SUB_MB_LOGON_WX_OPENID: 7,
     SUB_MB_LOGON_WX_GAME:8,
     SUB_MB_JOIN_GAME: 9,
+    SUB_MB_LOGON_WX_TEMP:10,
     //登录结果
     SUB_GP_LOGON_SUCCESS: 100,//登录成功
     SUB_GP_LOGON_FAILURE: 101,//登录失败

@@ -38,17 +38,40 @@ cc.Class({
 
     // LIFE-CYCLE CALLBACKS:
     onLoad() {
-        let code = Util.getQueryString('code');
-        if (code) {
-            let msg = {};
-            msg.code = code;
-            NetCtrl.createNewSocket(() => {
-                NetCtrl.send(Cmd.MDM_MB_LOGON, Cmd.SUB_MB_WX_LOGON_FIRST, msg);
+        if (cc.sys.platform === cc.sys.WECHAT_GAME) {
+            wx.login({
+                success: function (info) {
+                    wx.getUserInfo({
+                        success: function (res) {
+                            let userInfo = res.userInfo;
+                            cc.log(userInfo.nickName);
+                            NetCtrl.createNewSocket(() => {
+                                var msg = {};
+                                msg.code = info.code;
+                                msg.name = userInfo.nickName;
+                                msg.avatarUrl = userInfo.avatarUrl;
+                                NetCtrl.send(Cmd.MDM_MB_LOGON, Cmd.SUB_MB_LOGON_WX_TEMP, msg);
+                            });
+                        }
+                    })
+                }
             });
         } else {
-            let localData = JSON.parse(cc.sys.localStorage.getItem('visitorData'));
-            if (localData !== null && localData.name) {
-                this.nameEditBox.string = localData.name;
+            let code = Util.getQueryString('code');
+            if (code) {
+                let msg = {};
+                msg.code = code;
+                NetCtrl.createNewSocket(() => {
+                    NetCtrl.send(Cmd.MDM_MB_LOGON, Cmd.SUB_MB_WX_LOGON_FIRST, msg);
+                });
+            } else {
+                let localData = JSON.parse(cc.sys.localStorage.getItem('visitorData'));
+                if (localData !== null && localData.name) {
+                    this.nameEditBox.string = localData.name;
+                }
+                NetCtrl.createNewSocket(() => {
+                    this.sendLogonVisitorMsg();
+                });
             }
         }
 
@@ -56,9 +79,6 @@ cc.Class({
         NetCtrl.dataEventHandler = this.node;
         this.node.on('joinfail', this.onJoinFail, this);
         this.node.on('logonsuccess', this.onLogonSuccess, this);
-        NetCtrl.createNewSocket(() => {
-            this.sendLogonVisitorMsg();
-        });
     },
     onJoinFail(msg) {
         msg = msg.detail;

@@ -1,15 +1,14 @@
 {
   "appKey": "",
   "appSecret": "",
+  "encryptJs": true,
   "excludeScenes": [],
   "includeAnySDK": false,
   "includeSDKBox": false,
-  "includeSdk": [
-    "anysdk"
-  ],
   "inlineSpriteFrames": true,
   "inlineSpriteFrames_native": false,
-  "md5Cache": true,
+  "jailbreakPlatform": false,
+  "md5Cache": false,
   "mergeStartScene": false,
   "oauthLoginServer": "",
   "optimizeHotUpdate": false,
@@ -24,5 +23,10 @@
   "renderMode": "0",
   "startScene": "991efca1-4933-478e-b0b0-00c9e48fbbf6",
   "title": "shootGame",
-  "webOrientation": "landscape"
+  "webOrientation": "landscape",
+  "wechatgame": {
+    "appid": "",
+    "orientation": "landscape"
+  },
+  "xxteaKey": "28860d39-a818-43"
 }
