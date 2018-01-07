@@ -18,17 +18,24 @@ cc.Class({
         clockLabel: cc.Label,
         rankLayer: cc.Node,
         rankLabelPrefab: cc.Prefab,
+        killerPos: cc.Node,
+        entityPrefab: cc.Prefab,
     },
     onLoad() {
         let gameEnd = G.gameEnd;
         if (gameEnd.overReason === Cmd.OVER_REASON_OFFLINE) {
             this.setStatusInfo('Lost Connect,ReConnect?');
         } else if (gameEnd.overReason === Cmd.OVER_REASON_KILLED) {
-            this.setStatusInfo('Killed! Wait For Next Round');
+            this.setStatusInfo('Wait For Next Round,killed By');
             this.startBtn.interactable = false;
             this.leftTime = gameEnd.leftTime;
             this.failTime = new Date().getTime();
             this.setLeftClock(gameEnd.leftTime);
+
+            let killer = cc.instantiate(this.entityPrefab);
+            killer.getComponent('Entity').init(gameEnd.killerInfo);
+            killer.position = cc.p(0,0);
+            this.killerPos.addChild(killer);
         } else {
             let rank = 0;
             for (let i = 0; i < gameEnd.rankInfo.length; i++) {
@@ -56,7 +63,9 @@ cc.Class({
         });
     },
     clickJoinGame() {
+        cc.log("click join");
         NetCtrl.createNewSocket(() => {
+            cc.log("create new socket");
             var msg = {};
             msg.userID = G.userID;
             NetCtrl.send(Cmd.MDM_MB_LOGON, Cmd.SUB_MB_JOIN_GAME, msg);
@@ -79,6 +88,7 @@ cc.Class({
         if (count <= 0) {
             this.unschedule(this.clockCallback);
             this.setStatusInfo("可以开始了");
+            this.killerPos.active = false;
             this.clockLabel.string = 'Start';
             this.startBtn.interactable = true;
         } else {

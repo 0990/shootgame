@@ -1,23 +1,12 @@
-var Common = require('JoystickCommon');
-
 cc.Class({
     extends: cc.Component,
 
     properties: {
-        dot: {
+        joyBG:cc.Node,
+        joy: {
             default: null,
             type: cc.Node,
             displayName: '摇杆节点',
-        },
-
-        _joyCom: {
-            default: null,
-            displayName: 'joy Node',
-
-        },
-        _playerNode: {
-            default: null,
-            displayName: '被操作的目标Node',
         },
 
         _angle: {
@@ -40,15 +29,8 @@ cc.Class({
 
 
     onLoad: function () {
-        // joy下的Game组件
-        this._joyCom = this.node.parent.getComponent('Game');
-        // game组件下的player节点
-        this._playerNode = this._joyCom.sprite;
-
-        if (this._joyCom.touchType == Common.TouchType.DEFAULT) {
-            //对圆圈的触摸监听
-            this._initTouchEvent();
-        }
+        //对圆圈的触摸监听
+        this._initTouchEvent();
     },
 
 
@@ -56,32 +38,14 @@ cc.Class({
     _initTouchEvent: function () {
         var self = this;
 
-        self.node.on(cc.Node.EventType.TOUCH_START, this._touchStartEvent, self);
+        self.joyBG.on(cc.Node.EventType.TOUCH_START, this._touchStartEvent, self);
 
-        self.node.on(cc.Node.EventType.TOUCH_MOVE, this._touchMoveEvent, self);
+        self.joyBG.on(cc.Node.EventType.TOUCH_MOVE, this._touchMoveEvent, self);
 
         // 触摸在圆圈内离开或在圆圈外离开后，摇杆归位，player速度为0
-        self.node.on(cc.Node.EventType.TOUCH_END, this._touchEndEvent, self);
-        self.node.on(cc.Node.EventType.TOUCH_CANCEL, this._touchEndEvent, self);
+        self.joyBG.on(cc.Node.EventType.TOUCH_END, this._touchEndEvent, self);
+        self.joyBG.on(cc.Node.EventType.TOUCH_CANCEL, this._touchEndEvent, self);
     },
-
-    // //更新移动目标
-    // update: function (dt) {
-    //     switch (this._joyCom.directionType) {
-    //         case Common.DirectionType.ALL:
-    //             this._allDirectionsMove();
-    //             break;
-    //         default:
-    //             break;
-    //     }
-    // },
-    // //全方向移动
-    // _allDirectionsMove: function () {
-    //     this._playerNode.x += Math.cos(this._angle * (Math.PI / 180)) * this._speed;
-    //     this._playerNode.y += Math.sin(this._angle * (Math.PI / 180)) * this._speed;
-    //     cc.log(this._speed);
-    //     cc.log(this._angle);
-    // },
 
     //计算两点间的距离并返回
     _getDistance: function (pos1, pos2) {
@@ -101,7 +65,7 @@ cc.Class({
     //计算角度并返回
     _getAngle: function (point) {
 
-        var pos = this.node.getPosition();
+        var pos = this.joyBG.getPosition();
         this._angle = Math.atan2(point.y - pos.y, point.x - pos.x) * (180 / Math.PI);
         return this._angle;
     },
@@ -115,7 +79,7 @@ cc.Class({
     //设置实际速度
     _setSpeed: function (point) {
         //触摸点和遥控杆中心的距离
-        var distance = this._getDistance(point, this.node.getPosition());
+        var distance = this._getDistance(point, this.joyBG.getPosition());
 
         //如果半径
         if (distance < this._radius) {
@@ -128,38 +92,38 @@ cc.Class({
 
     _touchStartEvent: function (event) {
         // 获取触摸位置的世界坐标转换成圆圈的相对坐标（以圆圈的锚点为基准）
-        var touchPos = this.node.convertToNodeSpaceAR(event.getLocation());
+        var touchPos = this.joyBG.convertToNodeSpaceAR(event.getLocation());
         //触摸点与圆圈中心的距离
         var distance = this._getDistance(touchPos, cc.p(0, 0));
         //圆圈半径
-        var radius = this.node.width / 2;
+        var radius = this.joyBG.width / 2;
         // 记录摇杆位置，给touch move使用
         this._stickPos = touchPos;
-        var posX = this.node.getPosition().x + touchPos.x;
-        var posY = this.node.getPosition().y + touchPos.y;
+        var posX = this.joyBG.getPosition().x + touchPos.x;
+        var posY = this.joyBG.getPosition().y + touchPos.y;
         //手指在圆圈内触摸,控杆跟随触摸点
         if (radius > distance) {
-            this.dot.setPosition(cc.p(posX, posY));
+            this.joy.setPosition(cc.p(posX, posY));
             return true;
         }
         return false;
     },
 
     _touchMoveEvent: function (event) {
-        var touchPos = this.node.convertToNodeSpaceAR(event.getLocation());
+        var touchPos = this.joyBG.convertToNodeSpaceAR(event.getLocation());
         var distance = this._getDistance(touchPos, cc.p(0, 0));
-        var radius = this.node.width / 2;
+        var radius = this.joyBG.width / 2;
         // 由于摇杆的postion是以父节点为锚点，所以定位要加上ring和dot当前的位置(stickX,stickY)
-        var posX = this.node.getPosition().x + touchPos.x;
-        var posY = this.node.getPosition().y + touchPos.y;
+        var posX = this.joyBG.getPosition().x + touchPos.x;
+        var posY = this.joyBG.getPosition().y + touchPos.y;
         if (radius > distance) {
-            this.dot.setPosition(cc.p(posX, posY));
+            this.joy.setPosition(cc.p(posX, posY));
         }
         else {
             //控杆永远保持在圈内，并在圈内跟随触摸更新角度
-            var x = this.node.getPosition().x + Math.cos(this._getRadian(cc.p(posX, posY))) * radius;
-            var y = this.node.getPosition().y + Math.sin(this._getRadian(cc.p(posX, posY))) * radius;
-            this.dot.setPosition(cc.p(x, y));
+            var x = this.joyBG.getPosition().x + Math.cos(this._getRadian(cc.p(posX, posY))) * radius;
+            var y = this.joyBG.getPosition().y + Math.sin(this._getRadian(cc.p(posX, posY))) * radius;
+            this.joy.setPosition(cc.p(x, y));
         }
         //更新角度
         this._getAngle(cc.p(posX, posY));
@@ -169,7 +133,7 @@ cc.Class({
     },
 
     _touchEndEvent: function () {
-        this.dot.setPosition(this.node.getPosition());
+        this.joy.setPosition(this.joyBG.getPosition());
         this._speed = 0;
     },
 });

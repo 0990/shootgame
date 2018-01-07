@@ -24,7 +24,7 @@ module.exports = {
     logonHost: "ws://192.168.0.100",
     //logonHost: "wss://xujialong.jny2016.cn",
 
-    logonPort: 8500,
+    logonPort: 8400,
     //websocket协议
     wsProtocol: "yueZhanMJ",
     speed: 50,

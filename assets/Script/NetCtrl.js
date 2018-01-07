@@ -97,7 +97,9 @@ var NetControl = {
                     case Cmd.SUB_MB_LOGON_FAILURE:
                         {
                             cc.log("logon failed");
-                            G.alert("进入失败，请重新进入游戏", G.AT.OK);
+                            G.alert("进入失败，重新登入游戏？", G.AT.OK_CANCEL, () => {
+                                cc.director.loadScene('start');
+                            });
                             this.close();
                             // this.fire('logonfail', msg);
                             break;
@@ -113,7 +115,9 @@ var NetControl = {
                     case Cmd.SUB_MB_JOIN_GAME_FAILURE:
                         {
                             this.fire('joinfail', msg);
-                            G.alert("加入失败，请重新进入游戏", G.AT.OK);
+                            G.alert("进入失败，重新登入游戏？", G.AT.OK_CANCEL, () => {
+                                cc.director.loadScene('start');
+                            });
                             this.close();
                             break;
                         }

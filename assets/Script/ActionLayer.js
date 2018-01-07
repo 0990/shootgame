@@ -31,7 +31,7 @@ cc.Class({
         // add key down and key up event
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP, this.onKeyUp, this);
-        this._joyJS = this.joy.getComponent('JoystickBG');
+        this._joyJS = this.joy.getComponent('JoyStick');
     },
     clickShoot() {
         if (this._managerJS) {

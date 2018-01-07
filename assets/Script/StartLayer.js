@@ -38,7 +38,7 @@ cc.Class({
 
     // LIFE-CYCLE CALLBACKS:
     onLoad() {
-       // G.alert("网络连接失败，请检查网络", G.AT.OK);
+        // G.alert("网络连接失败，请检查网络", G.AT.OK);
         if (cc.sys.platform === cc.sys.WECHAT_GAME) {
             wx.login({
                 success: function (info) {
@@ -122,7 +122,9 @@ cc.Class({
     //     });
     // },
     clickJoinGame() {
+        cc.log("click join");
         NetCtrl.createNewSocket(() => {
+            cc.log("create new socket");
             var msg = {};
             msg.userID = G.userID;
             msg.name = this.nameEditBox.string;

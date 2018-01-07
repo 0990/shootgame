@@ -14,7 +14,7 @@ cc.Class({
         // },
         // ...
         nameLabel: cc.Label,
-        scoreLabel: cc.Label,
+       // scoreLabel: cc.Label,
         avatarSprite: cc.Sprite,
         defaultFrame: cc.SpriteFrame,
         greenFrame: cc.SpriteFrame,
@@ -122,7 +122,7 @@ cc.Class({
             this.getComponent(cc.Sprite).spriteFrame = this.greenFrame;
         }
         this.avatarSprite.node.color = color;
-        this.scoreLabel.string = this.score;
+        //this.scoreLabel.string = this.score;
     },
     startProtect() {
         this.scheduleOnce(() => {
