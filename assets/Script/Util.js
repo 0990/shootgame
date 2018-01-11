@@ -28,7 +28,8 @@ var Util = {
         let y = y2 - y1;
         let distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
         return distance;
-    }
+    },
+    
 };
 
 module.exports = Util;

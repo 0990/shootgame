@@ -17,7 +17,7 @@ cc.Class({
         startBtn: cc.Button,
         clockLabel: cc.Label,
         rankLayer: cc.Node,
-        rankLabelPrefab: cc.Prefab,
+        randItemPrefab: cc.Prefab,
         killerPos: cc.Node,
         entityPrefab: cc.Prefab,
     },
@@ -26,7 +26,7 @@ cc.Class({
         if (gameEnd.overReason === Cmd.OVER_REASON_OFFLINE) {
             this.setStatusInfo('Lost Connect,ReConnect?');
         } else if (gameEnd.overReason === Cmd.OVER_REASON_KILLED) {
-            this.setStatusInfo('Wait For Next Round,killed By');
+            this.setStatusInfo('请等待下一轮开始，击杀者：');
             this.startBtn.interactable = false;
             this.leftTime = gameEnd.leftTime;
             this.failTime = new Date().getTime();
@@ -34,15 +34,17 @@ cc.Class({
 
             let killer = cc.instantiate(this.entityPrefab);
             killer.getComponent('Entity').init(gameEnd.killerInfo);
-            killer.position = cc.p(0,0);
+            killer.position = cc.p(0, 0);
             this.killerPos.addChild(killer);
         } else {
             let rank = 0;
             for (let i = 0; i < gameEnd.rankInfo.length; i++) {
-                let item = gameEnd.rankInfo[i];
-                let string = item.rank + ":" + item.score + "score," + item.name;
-                let slot = cc.instantiate(this.rankLabelPrefab);
-                slot.getComponent(cc.Label).string = string;
+               // let item = gameEnd.rankInfo[i];
+
+                //let string = item.rank + ":" + item.score + "score," + item.name;
+                let slot = cc.instantiate(this.randItemPrefab);
+                //slot.getComponent(cc.Label).string = string;
+                slot.getComponent("RankItem").setItemData(gameEnd.rankInfo[i]);
                 this.rankLayer.addChild(slot);
                 if (item.entityID === G.entityID) {
                     rank = item.rank;
@@ -87,12 +89,12 @@ cc.Class({
         //this.count--;
         if (count <= 0) {
             this.unschedule(this.clockCallback);
-            this.setStatusInfo("可以开始了");
+            this.setStatusInfo('');
             this.killerPos.active = false;
-            this.clockLabel.string = 'Start';
+            this.clockLabel.string = '';
             this.startBtn.interactable = true;
         } else {
-            this.clockLabel.string = 'Start' + count;
+            this.clockLabel.string = count;
         }
     },
     setStatusInfo(string) {
@@ -101,7 +103,7 @@ cc.Class({
     setLeftClock(leftTime) {
         this.unschedule(this.clockCallback);
         // this.count = leftTime;
-        this.clockLabel.string = 'Start' + this.leftTime;
+        this.clockLabel.string = this.leftTime;
         //  this.clockLabel.node.active = true;
         this.schedule(this.clockCallback, 1);
     },

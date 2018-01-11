@@ -398,7 +398,7 @@ cc.Class({
             if (i < 3) {
                 let index = i + 1;
                 let entityJS = this.entityMap.get(objArr[i].entityID);
-                let string = "第" + index + "名" + entityJS.score + "分:" + entityJS.name;
+                let string = index + "," + entityJS.score + "分:" + entityJS.name;
                 this._showingLayerJS.setRank(i, string);
             }
         }

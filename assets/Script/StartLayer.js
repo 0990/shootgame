@@ -88,20 +88,20 @@ cc.Class({
         this.failTime = new Date().getTime();
         this.leftTime = data.leftTime;
         this.setLeftClock(data.leftTime);
-        this.statusInfoLabel.string = "Game Over,Wait For Next Round!";
+        this.statusInfoLabel.string = "上轮您已结束，请等待下轮开始!";
     },
     onLogonSuccess(msg) {
         msg = msg.detail;
         let data = msg.data;
         if (data.dead) {
             this.startBtn.interactable = false;
-            this.statusInfoLabel.string = "Game Over,Wait For Next Round!";
+            this.statusInfoLabel.string = "上轮您已结束，请等待下轮开始!";
             this.failTime = new Date().getTime();
             this.leftTime = data.leftTime;
             this.setLeftClock(data.leftTime);
         } else {
             this.startBtn.interactable = true;
-            this.statusInfoLabel.string = "Click Start!";
+            this.statusInfoLabel.string = "";
         }
     },
     sendLogonWX() {
@@ -135,11 +135,11 @@ cc.Class({
         let count = parseInt(this.leftTime - (new Date().getTime() - this.failTime) / 1000);
         if (count <= 0) {
             this.unschedule(this.clockCallback);
-            this.setStatusInfo("可以开始了");
-            this.clockLabel.string = 'Start';
+            this.setStatusInfo("");
+            this.clockLabel.string = '';
             this.startBtn.interactable = true;
         } else {
-            this.clockLabel.string = 'Start' + count;
+            this.clockLabel.string = count;
         }
     },
     setStatusInfo(string) {
@@ -147,7 +147,7 @@ cc.Class({
     },
     setLeftClock(leftTime) {
         this.unschedule(this.clockCallback);
-        this.clockLabel.string = 'Start' + this.leftTime;
+        this.clockLabel.string = this.leftTime;
         this.schedule(this.clockCallback, 1);
     },
     sendLogonVisitorMsg() {

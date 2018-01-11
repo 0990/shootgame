@@ -1,14 +1,14 @@
 {
   "ver": "1.0.0",
-  "uuid": "bd3cc7c0-b80f-4057-8e5a-13e0e731ec22",
+  "uuid": "9387aa6c-b955-460d-949a-464e06a5eb3a",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
   "subMetas": {
-    "Joystick": {
+    "rankBG": {
       "ver": "1.0.3",
-      "uuid": "66ef752e-3217-422b-a31f-fb0334c36a5b",
-      "rawTextureUuid": "bd3cc7c0-b80f-4057-8e5a-13e0e731ec22",
+      "uuid": "5e0c3ee3-69e9-4912-af4a-ad01c98a3fed",
+      "rawTextureUuid": "9387aa6c-b955-460d-949a-464e06a5eb3a",
       "trimType": "auto",
       "trimThreshold": 1,
       "rotated": false,
@@ -16,10 +16,10 @@
       "offsetY": 0,
       "trimX": 0,
       "trimY": 0,
-      "width": 73,
-      "height": 78,
-      "rawWidth": 73,
-      "rawHeight": 78,
+      "width": 900,
+      "height": 63,
+      "rawWidth": 900,
+      "rawHeight": 63,
       "borderTop": 0,
       "borderBottom": 0,
       "borderLeft": 0,
