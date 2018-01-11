@@ -112,7 +112,7 @@ cc.Class({
                 for (let i = 0; i < data.entities.length; i++) {
                     this.createEntity(data.entities[i]);
                 }
-                this.schedule(this.calculateRank, 1);
+                this.schedule(this.calculateRank, 2);
             }
             case Cmd.SUB_MB_CALCULATE_RESULT: {
                 if (data.entityDeleteList) {
@@ -144,7 +144,7 @@ cc.Class({
                         let item = data.entityChangeList[i];
                         let itemJS = this.entityMap.get(item.entityID);
                         if (item.entityID === G.entityID && item.score !== itemJS.score) {
-                            this._showingLayerJS.showKillCount(item.score);
+                            this._showingLayerJS.showGetScore(item.score - itemJS.score);
                         }
                         itemJS.applyDisplay(item);
                     }
@@ -216,6 +216,37 @@ cc.Class({
                 if (data.overReason === Cmd.OVER_REASON_KILLED) {
                     this.entityMap.get(G.entityID).playDeadAni();
                     this.playBombEffect(G.entityID);
+                    let objArr = new Array();
+                    this.entityMap.forEach(function (entityJS, key, mapObj) {
+                        if (entityJS.dead === false) {
+                            let obj = {};
+                            obj.entityID = key;
+                            obj.score = entityJS.score;
+                            obj.name = entityJS.name;
+                            obj.killCount = entityJS.killCount;
+                            obj.headImgUrl = entityJS.headImgUrl;
+                            obj.accountType = entityJS.accountType;
+                            objArr.push(obj);
+                        }
+                    });
+                    objArr.sort(function (a, b) {
+                        if (a.score < b.score) {
+                            return true;
+                        } else if (a.score > b.score) {
+                            return false;
+                        } else {
+                            return a.entityID > b.entityID;
+                        }
+                    });
+                    G.gameEnd.rankInfo = objArr;
+                    // for (let i = 0; i < objArr.length; i++) {
+                    //     if (i < 3) {
+                    //         let index = i + 1;
+                    //         let entityJS = this.entityMap.get(objArr[i].entityID);
+                    //         let string = index + "," + entityJS.score + "分:" + entityJS.name;
+                    //         this._showingLayerJS.setRank(i, string);
+                    //     }
+                    // }
                 } else {
                     for (let i = 0; i < data.rankInfo.length; i++) {
                         let item = data.rankInfo[i];
@@ -388,7 +419,7 @@ cc.Class({
             } else if (a.score > b.score) {
                 return false;
             } else {
-                return a.entityID < b.entityID;
+                return a.entityID > b.entityID;
             }
         });
         this._showingLayerJS.setRank(0, "");

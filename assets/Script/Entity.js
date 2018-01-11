@@ -14,7 +14,7 @@ cc.Class({
         // },
         // ...
         nameLabel: cc.Label,
-       // scoreLabel: cc.Label,
+        // scoreLabel: cc.Label,
         avatarSprite: cc.Sprite,
         defaultFrame: cc.SpriteFrame,
         greenFrame: cc.SpriteFrame,
@@ -93,6 +93,8 @@ cc.Class({
         this.node.color = cc.Color.WHITE;
         this.name = info.name;
         this.nameLabel.string = info.name;
+        this.score = 0;
+        this.killCount = 0;
         // if (info.ghostMode) {
         //     this.node.opacity = 80;
         // } else {

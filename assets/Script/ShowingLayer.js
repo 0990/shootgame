@@ -48,8 +48,8 @@ cc.Class({
     start() {
 
     },
-    showKillCount(count) {
-        this.killCountNode.getComponent(cc.Label).string = count + "！";
+    showGetScore(count) {
+        this.killCountNode.getComponent(cc.Label).string = "+"+count;
         let anim = this.killCountNode.getComponent(cc.Animation);
         anim.play();
     },

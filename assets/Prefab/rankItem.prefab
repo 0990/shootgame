@@ -64,7 +64,7 @@
     "_position": {
       "__type__": "cc.Vec2",
       "x": 0,
-      "y": 0
+      "y": 189.5
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -103,7 +103,7 @@
     "_cascadeOpacityEnabled": true,
     "_anchorPoint": {
       "__type__": "cc.Vec2",
-      "x": 0.5,
+      "x": 0,
       "y": 0.5
     },
     "_contentSize": {
@@ -117,7 +117,7 @@
     "_scaleY": 1,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": -245,
+      "x": -435,
       "y": 0
     },
     "_skewX": 0,
@@ -144,7 +144,7 @@
     "_isSystemFontUsed": true,
     "_spacingX": 0,
     "_N$string": "1     小风吹的我乱了   ",
-    "_N$horizontalAlign": 1,
+    "_N$horizontalAlign": 0,
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
     "_N$overflow": 0
@@ -322,7 +322,7 @@
     "_isSystemFontUsed": true,
     "_spacingX": 0,
     "_N$string": "10    50",
-    "_N$horizontalAlign": 1,
+    "_N$horizontalAlign": 2,
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
     "_N$overflow": 0

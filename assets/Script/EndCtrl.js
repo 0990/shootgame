@@ -16,7 +16,8 @@ cc.Class({
         statusLabel: cc.Label,
         startBtn: cc.Button,
         clockLabel: cc.Label,
-        rankLayer: cc.Node,
+        rankContent: cc.Node,
+        rankMeItem: cc.Node,
         randItemPrefab: cc.Prefab,
         killerPos: cc.Node,
         entityPrefab: cc.Prefab,
@@ -24,9 +25,9 @@ cc.Class({
     onLoad() {
         let gameEnd = G.gameEnd;
         if (gameEnd.overReason === Cmd.OVER_REASON_OFFLINE) {
-            this.setStatusInfo('Lost Connect,ReConnect?');
+            this.setStatusInfo('断网了，重连?');
         } else if (gameEnd.overReason === Cmd.OVER_REASON_KILLED) {
-            this.setStatusInfo('请等待下一轮开始，击杀者：');
+            this.setStatusInfo('被击杀！请等待下一轮开始');
             this.startBtn.interactable = false;
             this.leftTime = gameEnd.leftTime;
             this.failTime = new Date().getTime();
@@ -36,19 +37,33 @@ cc.Class({
             killer.getComponent('Entity').init(gameEnd.killerInfo);
             killer.position = cc.p(0, 0);
             this.killerPos.addChild(killer);
-        } else {
             let rank = 0;
             for (let i = 0; i < gameEnd.rankInfo.length; i++) {
-               // let item = gameEnd.rankInfo[i];
-
+                let itemData = gameEnd.rankInfo[i];
+                itemData.rank = i + 1;
                 //let string = item.rank + ":" + item.score + "score," + item.name;
                 let slot = cc.instantiate(this.randItemPrefab);
                 //slot.getComponent(cc.Label).string = string;
-                slot.getComponent("RankItem").setItemData(gameEnd.rankInfo[i]);
-                this.rankLayer.addChild(slot);
-                if (item.entityID === G.entityID) {
-                    rank = item.rank;
-                    // break;
+                slot.getComponent("RankItem").setItemData(itemData);
+                this.rankContent.addChild(slot);
+                if (itemData.entityID === G.entityID) {
+                    rank = itemData.rank;
+                    this.rankMeItem.getComponent("RankItem").setItemData(itemData);
+                }
+            }
+        } else {
+            let rank = 0;
+            for (let i = 0; i < gameEnd.rankInfo.length; i++) {
+                let itemData = gameEnd.rankInfo[i];
+                itemData.rank = i + 1;
+                //let string = item.rank + ":" + item.score + "score," + item.name;
+                let slot = cc.instantiate(this.randItemPrefab);
+                //slot.getComponent(cc.Label).string = string;
+                slot.getComponent("RankItem").setItemData(itemData);
+                this.rankContent.addChild(slot);
+                if (itemData.entityID === G.entityID) {
+                    rank = itemData.rank;
+                    this.rankMeItem.getComponent("RankItem").setItemData(itemData);
                 }
             }
             let string = "您当场排名" + rank + ',再战一局？';
@@ -90,7 +105,7 @@ cc.Class({
         if (count <= 0) {
             this.unschedule(this.clockCallback);
             this.setStatusInfo('');
-            this.killerPos.active = false;
+            //this.killerPos.active = false;
             this.clockLabel.string = '';
             this.startBtn.interactable = true;
         } else {

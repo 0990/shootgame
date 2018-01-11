@@ -83,12 +83,13 @@ var NetControl = {
                             //G.config = data.config;
                             //G.entityID = G.userInfo.entityID;
                             // G = data;
-                            // let userData = {
-                            //     userID: G.userInfo.userID,
-                            //     name: G.userInfo.name,
-                            // };
-                            // cc.sys.localStorage.setItem('visitorData', JSON.stringify(userData));
+                            let userData = {
+                                userID: data.userID,
+                                name: data.name,
+                            };
+                            cc.sys.localStorage.setItem('visitorData', JSON.stringify(userData));
                             G.userID = data.userID;
+                            cc.log("logon success", data);
                             this.fire('logonsuccess', msg);
                             this.close();
                             //cc.director.loadScene('game');

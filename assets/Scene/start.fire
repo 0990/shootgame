@@ -48,7 +48,7 @@
     "_globalZOrder": 0,
     "_opacityModifyRGB": false,
     "groupIndex": 0,
-    "autoReleaseAssets": null
+    "autoReleaseAssets": false
   },
   {
     "__type__": "cc.Node",
@@ -314,8 +314,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 244.51,
-      "height": 40
+      "width": 183.38,
+      "height": 30
     },
     "_rotationX": 0,
     "_rotationY": 0,
@@ -324,7 +324,7 @@
     "_position": {
       "__type__": "cc.Vec2",
       "x": -9,
-      "y": 326
+      "y": -123
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -342,9 +342,9 @@
     },
     "_enabled": true,
     "_useOriginalSize": false,
-    "_actualFontSize": 40,
-    "_fontSize": 40,
-    "_lineHeight": 40,
+    "_actualFontSize": 30,
+    "_fontSize": 30,
+    "_lineHeight": 30,
     "_enableWrapText": true,
     "_N$file": null,
     "_isSystemFontUsed": true,
