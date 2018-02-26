@@ -1,7 +1,7 @@
 {
   "appKey": "",
   "appSecret": "",
-  "encryptJs": true,
+  "encryptJs": false,
   "excludeScenes": [],
   "includeAnySDK": false,
   "includeSDKBox": false,
@@ -18,7 +18,7 @@
     "portrait": false,
     "upsideDown": false
   },
-  "packageName": "org.cocos2d.helloworld",
+  "packageName": "org.cocos2d.shootgame",
   "privateKey": "",
   "renderMode": "0",
   "startScene": "991efca1-4933-478e-b0b0-00c9e48fbbf6",
@@ -28,5 +28,6 @@
     "appid": "",
     "orientation": "landscape"
   },
-  "xxteaKey": "28860d39-a818-43"
+  "xxteaKey": "28860d39-a818-43",
+  "zipCompressJs": true
 }

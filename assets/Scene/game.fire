@@ -57,7 +57,7 @@
     "_globalZOrder": 0,
     "_opacityModifyRGB": false,
     "groupIndex": 0,
-    "autoReleaseAssets": false
+    "autoReleaseAssets": null
   },
   {
     "__type__": "cc.Node",
@@ -677,12 +677,6 @@
     },
     "duration": 0.1,
     "zoomScale": 1.2,
-    "pressedSprite": {
-      "__uuid__": "e9ec654c-97a2-4787-9325-e6a10375219a"
-    },
-    "hoverSprite": {
-      "__uuid__": "e9ec654c-97a2-4787-9325-e6a10375219a"
-    },
     "clickEvents": [
       {
         "__id__": 17
@@ -706,6 +700,18 @@
     },
     "_N$normalSprite": {
       "__uuid__": "c7beb932-594e-4905-8d5a-1503a6813e81"
+    },
+    "_N$pressedSprite": {
+      "__uuid__": "e9ec654c-97a2-4787-9325-e6a10375219a"
+    },
+    "pressedSprite": {
+      "__uuid__": "e9ec654c-97a2-4787-9325-e6a10375219a"
+    },
+    "_N$hoverSprite": {
+      "__uuid__": "e9ec654c-97a2-4787-9325-e6a10375219a"
+    },
+    "hoverSprite": {
+      "__uuid__": "e9ec654c-97a2-4787-9325-e6a10375219a"
     },
     "_N$disabledSprite": {
       "__uuid__": "29158224-f8dd-4661-a796-1ffab537140e"
@@ -1074,7 +1080,7 @@
     "_N$file": null,
     "_isSystemFontUsed": true,
     "_spacingX": 0,
-    "_N$string": "",
+    "_N$string": "1,暂无",
     "_N$horizontalAlign": 0,
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
@@ -1148,7 +1154,7 @@
     "_N$file": null,
     "_isSystemFontUsed": true,
     "_spacingX": 0,
-    "_N$string": "",
+    "_N$string": "2,暂无",
     "_N$horizontalAlign": 0,
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
@@ -1222,7 +1228,7 @@
     "_N$file": null,
     "_isSystemFontUsed": true,
     "_spacingX": 0,
-    "_N$string": "",
+    "_N$string": "3,暂无",
     "_N$horizontalAlign": 0,
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
@@ -1296,7 +1302,7 @@
     "_N$file": null,
     "_isSystemFontUsed": true,
     "_spacingX": 0,
-    "_N$string": "",
+    "_N$string": "我的成绩",
     "_N$horizontalAlign": 0,
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",

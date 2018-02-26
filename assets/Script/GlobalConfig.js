@@ -21,8 +21,8 @@ window.G = {
 
 module.exports = {
     debugMode: false,
-    logonHost: "ws://192.168.0.100",
-    //logonHost: "wss://xujialong.jny2016.cn",
+    //logonHost: "ws://192.168.0.100",
+    logonHost: "ws://47.97.125.198",
 
     logonPort: 8400,
     //websocket协议
