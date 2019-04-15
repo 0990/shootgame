@@ -22,10 +22,10 @@ window.G = {
 module.exports = {
     debugMode: false,
     //logonHost: "ws://192.168.0.100",
-    logonHost: "ws://47.97.125.198",
+    logonHost: "ws://127.0.0.1",
 
     logonPort: 8400,
     //websocket协议
-    wsProtocol: "yueZhanMJ",
+    wsProtocol: "xujialong",
     speed: 50,
 }

@@ -19,8 +19,14 @@ cc.Class({
         clientPrediction: false,
         serverReconciliation: false,
         interpolation: false,
-        bulletClip: cc.AudioClip,
-        bombClip: cc.AudioClip,
+        bulletClip: {
+            type:cc.AudioClip,
+            default:null,
+        },
+        bombClip: {
+            type:cc.AudioClip,
+            default:null,
+        },
     },
     // use this for initialization
     onLoad: function () {
