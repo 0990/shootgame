@@ -108,7 +108,7 @@ cc.Class({
         this.entityPool.put(node);
     },
     onGameMessage: function (msg) {
-        msg = msg.detail;
+        //msg = msg.detail;
         var data = msg.data;
         if (this.sceneReady === false && msg.subID !== Cmd.SUB_MB_GAME_SCENE) return;
         switch (msg.subID) {
@@ -289,7 +289,8 @@ cc.Class({
     playBulletEffect(creatorID) {
         let nodeA = this.entityMap.get(creatorID).node;
         let nodeB = this.entityMap.get(G.entityID).node;
-        let distance = cc.pDistance(nodeA.position, nodeB.position);
+        let distance = nodeA.position.sub(nodeB.position).mag()
+        //let distance = cc.pDistance(nodeA.position, nodeB.position);
         if (distance <= 500) {
             let volume = 1.0;
             if (distance > 100) {
@@ -301,7 +302,8 @@ cc.Class({
     playBombEffect(entityID) {
         let nodeA = this.entityMap.get(entityID).node;
         let nodeB = this.entityMap.get(G.entityID).node;
-        let distance = cc.pDistance(nodeA.position, nodeB.position);
+        let distance = nodeA.position.sub(nodeB.position).mag()
+        //let distance = cc.pDistance(nodeA.position, nodeB.position);
         if (distance <= 500) {
             let volume = 1.0;
             if (distance > 100) {

@@ -82,7 +82,7 @@ cc.Class({
         this.node.on('logonsuccess', this.onLogonSuccess, this);
     },
     onJoinFail(msg) {
-        msg = msg.detail;
+       // msg = msg.detail;
         let data = msg.data;
         this.startBtn.interactable = false;
         this.failTime = new Date().getTime();
@@ -91,7 +91,7 @@ cc.Class({
         this.statusInfoLabel.string = "上轮您已结束，请等待下轮开始!";
     },
     onLogonSuccess(msg) {
-        msg = msg.detail;
+      //  msg = msg.detail;
         let data = msg.data;
         if (data.dead) {
             this.startBtn.interactable = false;

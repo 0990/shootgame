@@ -68,22 +68,22 @@ cc.Class({
     },
     onKeyDown: function (event) {
         switch (event.keyCode) {
-            case cc.KEY.left:
+            case cc.macro.KEY.left:
                 {
                     this.keyLeft = true;
                     break;
                 }
-            case cc.KEY.right:
+            case cc.macro.KEY.right:
                 {
                     this.keyRight = true;
                     break;
                 }
-            case cc.KEY.up:
+            case cc.macro.KEY.up:
                 {
                     this.keyUp = true;
                     break;
                 }
-            case cc.KEY.down:
+            case cc.macro.KEY.down:
                 {
                     this.keyDown = true;
                     break;
@@ -93,22 +93,22 @@ cc.Class({
     },
     onKeyUp: function (event) {
         switch (event.keyCode) {
-            case cc.KEY.left:
+            case cc.macro.KEY.left:
                 {
                     this.keyLeft = false;
                     break;
                 }
-            case cc.KEY.right:
+            case cc.macro.KEY.right:
                 {
                     this.keyRight = false;
                     break;
                 }
-            case cc.KEY.up:
+            case cc.macro.KEY.up:
                 {
                     this.keyUp = false;
                     break;
                 }
-            case cc.KEY.down:
+            case cc.macro.KEY.down:
                 {
                     this.keyDown = false;
                     break;

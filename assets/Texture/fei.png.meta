@@ -1,12 +1,13 @@
 {
-  "ver": "2.0.0",
+  "ver": "2.2.0",
   "uuid": "9908852c-10d3-469e-8805-981fbd4268ca",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
+  "premultiplyAlpha": false,
   "subMetas": {
     "fei": {
-      "ver": "1.0.3",
+      "ver": "1.0.4",
       "uuid": "c7beb932-594e-4905-8d5a-1503a6813e81",
       "rawTextureUuid": "9908852c-10d3-469e-8805-981fbd4268ca",
       "trimType": "auto",

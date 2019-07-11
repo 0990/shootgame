@@ -765,7 +765,7 @@ declare module cc {
 	@example 
 	```js
 	// example
-	var placeAction = cc.place(cc.p(200, 200));
+	var placeAction = cc.place(cc.v2(200, 200));
 	var placeAction = cc.place(200, 200);
 	``` 
 	*/
@@ -841,7 +841,7 @@ declare module cc {
 	@example 
 	```js
 	// example
-	var action = cc.spawn(cc.jumpBy(2, cc.p(300, 0), 50, 4), cc.rotateBy(2, 720));
+	var action = cc.spawn(cc.jumpBy(2, cc.v2(300, 0), 50, 4), cc.rotateBy(2, 720));
 	todo:It should be the direct use new
 	``` 
 	*/
@@ -892,7 +892,7 @@ declare module cc {
 	@example 
 	```js
 	// example
-	var actionTo = cc.moveBy(2, cc.p(windowSize.width - 40, windowSize.height - 40));
+	var actionTo = cc.moveBy(2, cc.v2(windowSize.width - 40, windowSize.height - 40));
 	``` 
 	*/
 	export function moveBy(duration: number, deltaPos: Vec2|number, deltaY?: number): ActionInterval;	
@@ -909,7 +909,7 @@ declare module cc {
 	@example 
 	```js
 	// example
-	var actionBy = cc.moveTo(2, cc.p(80, 80));
+	var actionBy = cc.moveTo(2, cc.v2(80, 80));
 	``` 
 	*/
 	export function moveTo(duration: number, position: Vec2|number, y?: number): ActionInterval;	
@@ -959,7 +959,7 @@ declare module cc {
 	@example 
 	```js
 	// example
-	var actionBy = cc.jumpBy(2, cc.p(300, 0), 50, 4);
+	var actionBy = cc.jumpBy(2, cc.v2(300, 0), 50, 4);
 	var actionBy = cc.jumpBy(2, 300, 0, 50, 4);
 	``` 
 	*/
@@ -978,7 +978,7 @@ declare module cc {
 	@example 
 	```js
 	// example
-	var actionTo = cc.jumpTo(2, cc.p(300, 300), 50, 4);
+	var actionTo = cc.jumpTo(2, cc.v2(300, 300), 50, 4);
 	var actionTo = cc.jumpTo(2, 300, 300, 50, 4);
 	``` 
 	*/
@@ -994,7 +994,7 @@ declare module cc {
 	@example 
 	```js
 	// example
-	var bezier = [cc.p(0, windowSize.height / 2), cc.p(300, -windowSize.height / 2), cc.p(300, 100)];
+	var bezier = [cc.v2(0, windowSize.height / 2), cc.v2(300, -windowSize.height / 2), cc.v2(300, 100)];
 	var bezierForward = cc.bezierBy(3, bezier);
 	``` 
 	*/
@@ -1008,7 +1008,7 @@ declare module cc {
 	@example 
 	```js
 	// example
-	var bezier = [cc.p(0, windowSize.height / 2), cc.p(300, -windowSize.height / 2), cc.p(300, 100)];
+	var bezier = [cc.v2(0, windowSize.height / 2), cc.v2(300, -windowSize.height / 2), cc.v2(300, 100)];
 	var bezierTo = cc.bezierTo(2, bezier);
 	``` 
 	*/
@@ -1776,7 +1776,7 @@ declare module cc {
 	
 	@example 
 	```js
-	cc.pCompOp(cc.p(-10, -10), Math.abs); // Vec2 {x: 10, y: 10};
+	cc.pCompOp(cc.v2(-10, -10), Math.abs); // Vec2 {x: 10, y: 10};
 	``` 
 	*/
 	export function pCompOp(p: Vec2, opFunc: Function): Vec2;	
@@ -2131,10 +2131,10 @@ declare module cc {
 	/**
 	!#en
 	Helper function that creates a cc.Size.<br/>
-	Please use cc.p or cc.v2 instead, it will soon replace cc.Size.
+	Please use cc.v2 or cc.v2 instead, it will soon replace cc.Size.
 	!#zh
 	创建一个 cc.Size 对象的帮助函数。<br/>
-	注意：可以使用 cc.p 或者是 cc.v2 代替，它们将很快取代 cc.Size。
+	注意：可以使用 cc.v2 或者是 cc.v2 代替，它们将很快取代 cc.Size。
 	@param w width or a size object
 	@param h height
 	
@@ -2198,10 +2198,10 @@ declare module cc {
 	
 	@example 
 	```js
-	var point1 = cc.p();
-	var point2 = cc.p(100, 100);
-	var point3 = cc.p(point2);
-	var point4 = cc.p({x: 100, y: 100});
+	var point1 = cc.v2();
+	var point2 = cc.v2(100, 100);
+	var point3 = cc.v2(point2);
+	var point4 = cc.v2({x: 100, y: 100});
 	``` 
 	*/
 	export function p(x?: number|any, y?: number): Vec2;	
@@ -7411,7 +7411,7 @@ declare module cc {
 		```js
 		// Scroll to middle position in 0.1 second in x-axis
 		var maxScrollOffset = this.getMaxScrollOffset();
-		scrollView.scrollToOffset(cc.p(maxScrollOffset.x / 2, 0), 0.1);
+		scrollView.scrollToOffset(cc.v2(maxScrollOffset.x / 2, 0), 0.1);
 		``` 
 		*/
 		scrollToOffset(offset: Vec2, timeInSecond?: number, attenuated?: boolean): void;		
@@ -7443,7 +7443,7 @@ declare module cc {
 		/**
 		!#en Scroll the content to the percent position of ScrollView in any direction.
 		!#zh 视图内容在规定时间内进行垂直方向和水平方向的滚动，并且滚动到指定百分比位置上。
-		@param anchor A point which will be clamp between cc.p(0,0) and cc.p(1,1).
+		@param anchor A point which will be clamp between cc.v2(0,0) and cc.v2(1,1).
 		@param timeInSecond Scroll time in second, if you don't pass timeInSecond,
 		the content will jump to the percent position of ScrollView immediately.
 		@param attenuated Whether the scroll acceleration attenuated, default is true.
@@ -7451,10 +7451,10 @@ declare module cc {
 		@example 
 		```js
 		// Vertical scroll to the bottom of the view.
-		scrollView.scrollTo(cc.p(0, 1), 0.1);
+		scrollView.scrollTo(cc.v2(0, 1), 0.1);
 		
 		// Horizontal scroll to view right.
-		scrollView.scrollTo(cc.p(1, 0), 0.1);
+		scrollView.scrollTo(cc.v2(1, 0), 0.1);
 		``` 
 		*/
 		scrollTo(anchor: Vec2, timeInSecond?: number, attenuated?: boolean): void;		
@@ -12953,9 +12953,9 @@ declare module cc {
 		/**
 		!#en
 		Constructor
-		see {{#crossLink "cc/vec2:method"}}cc.v2{{/crossLink}} or {{#crossLink "cc/p:method"}}cc.p{{/crossLink}}
+		see {{#crossLink "cc/vec2:method"}}cc.v2{{/crossLink}} or {{#crossLink "cc/p:method"}}cc.v2{{/crossLink}}
 		!#zh
-		构造函数，可查看 {{#crossLink "cc/vec2:method"}}cc.v2{{/crossLink}} 或者 {{#crossLink "cc/p:method"}}cc.p{{/crossLink}}
+		构造函数，可查看 {{#crossLink "cc/vec2:method"}}cc.v2{{/crossLink}} 或者 {{#crossLink "cc/p:method"}}cc.v2{{/crossLink}}
 		@param x x
 		@param y y 
 		*/

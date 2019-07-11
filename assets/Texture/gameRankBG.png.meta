@@ -1,12 +1,13 @@
 {
-  "ver": "2.0.0",
+  "ver": "2.2.0",
   "uuid": "08654dbb-56bf-40ec-a41d-3fa29be03dd1",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
+  "premultiplyAlpha": false,
   "subMetas": {
     "gameRankBG": {
-      "ver": "1.0.3",
+      "ver": "1.0.4",
       "uuid": "466220a8-a28a-409d-bc69-c4bd74f17eb5",
       "rawTextureUuid": "08654dbb-56bf-40ec-a41d-3fa29be03dd1",
       "trimType": "auto",

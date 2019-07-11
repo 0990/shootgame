@@ -94,7 +94,7 @@ cc.Class({
         // 获取触摸位置的世界坐标转换成圆圈的相对坐标（以圆圈的锚点为基准）
         var touchPos = this.joyBG.convertToNodeSpaceAR(event.getLocation());
         //触摸点与圆圈中心的距离
-        var distance = this._getDistance(touchPos, cc.p(0, 0));
+        var distance = this._getDistance(touchPos, cc.v2(0, 0));
         //圆圈半径
         var radius = this.joyBG.width / 2;
         // 记录摇杆位置，给touch move使用
@@ -103,7 +103,7 @@ cc.Class({
         var posY = this.joyBG.getPosition().y + touchPos.y;
         //手指在圆圈内触摸,控杆跟随触摸点
         if (radius > distance) {
-            this.joy.setPosition(cc.p(posX, posY));
+            this.joy.setPosition(cc.v2(posX, posY));
             return true;
         }
         return false;
@@ -111,24 +111,24 @@ cc.Class({
 
     _touchMoveEvent: function (event) {
         var touchPos = this.joyBG.convertToNodeSpaceAR(event.getLocation());
-        var distance = this._getDistance(touchPos, cc.p(0, 0));
+        var distance = this._getDistance(touchPos, cc.v2(0, 0));
         var radius = this.joyBG.width / 2;
         // 由于摇杆的postion是以父节点为锚点，所以定位要加上ring和dot当前的位置(stickX,stickY)
         var posX = this.joyBG.getPosition().x + touchPos.x;
         var posY = this.joyBG.getPosition().y + touchPos.y;
         if (radius > distance) {
-            this.joy.setPosition(cc.p(posX, posY));
+            this.joy.setPosition(cc.v2(posX, posY));
         }
         else {
             //控杆永远保持在圈内，并在圈内跟随触摸更新角度
-            var x = this.joyBG.getPosition().x + Math.cos(this._getRadian(cc.p(posX, posY))) * radius;
-            var y = this.joyBG.getPosition().y + Math.sin(this._getRadian(cc.p(posX, posY))) * radius;
-            this.joy.setPosition(cc.p(x, y));
+            var x = this.joyBG.getPosition().x + Math.cos(this._getRadian(cc.v2(posX, posY))) * radius;
+            var y = this.joyBG.getPosition().y + Math.sin(this._getRadian(cc.v2(posX, posY))) * radius;
+            this.joy.setPosition(cc.v2(x, y));
         }
         //更新角度
-        this._getAngle(cc.p(posX, posY));
+        this._getAngle(cc.v2(posX, posY));
         //设置实际速度
-        this._setSpeed(cc.p(posX, posY));
+        this._setSpeed(cc.v2(posX, posY));
 
     },
 

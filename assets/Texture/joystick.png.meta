@@ -1,12 +1,13 @@
 {
-  "ver": "2.0.0",
+  "ver": "2.2.0",
   "uuid": "cad2c2ad-dc44-4126-ba2e-42110013aa39",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
+  "premultiplyAlpha": false,
   "subMetas": {
     "joystick": {
-      "ver": "1.0.3",
+      "ver": "1.0.4",
       "uuid": "af6ae265-4678-499a-8402-5131951e2796",
       "rawTextureUuid": "cad2c2ad-dc44-4126-ba2e-42110013aa39",
       "trimType": "auto",

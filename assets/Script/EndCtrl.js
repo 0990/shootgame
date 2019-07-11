@@ -35,7 +35,7 @@ cc.Class({
 
             let killer = cc.instantiate(this.entityPrefab);
             killer.getComponent('Entity').init(gameEnd.killerInfo);
-            killer.position = cc.p(0, 0);
+            killer.position = cc.v2(0, 0);
             this.killerPos.addChild(killer);
             let rank = 0;
             for (let i = 0; i < gameEnd.rankInfo.length; i++) {
