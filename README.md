@@ -10,4 +10,4 @@ cocos creator开发的对战小游戏客户端<br>
 先运行服务端
 服务端在此：https://github.com/0990/foxuc
 
-客户端使用cocos creator1.10打开项目，运行即可
+客户端使用cocos creator2.010打开项目，运行即可
