@@ -1,5 +1,7 @@
 # 头像大乱战
-cocos creator开发的对战小游戏客户端<br>
+cocos creator开发的对战小游戏客户端（json通信）<br>
+protobuf通信版在此 https://github.com/0990/avatar-fight-client<br>
+点此试玩(protobuf版）：http://34.92.209.203<br>
 
 ![login](doc/login.png)<br>
 ![game](doc/game.png)<br>
@@ -11,3 +13,4 @@ cocos creator开发的对战小游戏客户端<br>
 服务端在此：https://github.com/0990/foxuc
 
 客户端使用cocos creator2.0.10打开项目，运行即可
+
