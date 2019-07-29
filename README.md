@@ -1,7 +1,7 @@
 # 头像大乱战
 cocos creator开发的对战小游戏客户端（json通信）<br>
 protobuf通信版: https://github.com/0990/avatar-fight-client<br>
-点此试玩(protobuf版):http://34.92.209.203<br>
+点此试玩(protobuf版):http://avatarfight.0990game.tk<br>
 
 ![login](doc/login.png)<br>
 ![game](doc/game.png)<br>
